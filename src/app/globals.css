@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Sistema de diseño — Skating Club (tema oscuro personalizado).
+ * Paleta principal:
+ *   Background #0A0A0A · Surface #111111 · Surface elevated #1A1A1A
+ *   Border #222222 · Accent #00E5A0 · Accent hover #00C988
+ *   Texto primario #F5F5F5 · Texto secundario #888888
+ */
+@layer base {
+  :root {
+    /* #0A0A0A */
+    --background: 0 0% 4%;
+    /* #F5F5F5 */
+    --foreground: 0 0% 96%;
+
+    /* Surface #111111 */
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 96%;
+
+    /* Surface elevated #1A1A1A */
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 96%;
+
+    /* Accent #00E5A0 (verde menta - nueva paleta) */
+    --primary: 160 100% 45%;
+    --primary-foreground: 0 0% 4%;
+    /* Accent hover #00C988 */
+    --primary-hover: 160 100% 39%;
+
+    /* Surface elevated para superficies secundarias */
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 96%;
+
+    /* Surface para estados muted */
+    --muted: 0 0% 7%;
+    /* Texto secundario #888888 */
+    --muted-foreground: 0 0% 53%;
+
+    /* Hover/active sutil sobre la superficie (#222222) */
+    --accent: 0 0% 13%;
+    --accent-foreground: 0 0% 96%;
+
+    /* Error #EF4444 */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 96%;
+
+    /* Éxito #22C55E */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 4%;
+
+    /* Warning #F59E0B */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 4%;
+
+    /* Border / Input #222222 */
+    --border: 0 0% 13%;
+    --input: 0 0% 13%;
+    /* Ring = accent */
+    --ring: 160 100% 45%;
+
+    /* Glow del acento — rgba(0,229,160,0.15) */
+    --accent-glow: rgba(0, 229, 160, 0.15);
+
+    /* Cards 8px -> lg; botones 6px -> md; inputs 4px -> sm */
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* El scroll suave lo gestiona Lenis; desactivamos el nativo para no chocar. */
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+  }
+}
+
+/* Énfasis dinámico para palabras destacadas (GlowText). */
+@keyframes textGlow {
+  0%,
+  100% {
+    color: #00E5A0;
+    text-shadow: 0 0 20px rgba(0, 229, 160, 0.4);
+  }
+  50% {
+    color: #66ffcc;
+    text-shadow:
+      0 0 30px rgba(0, 229, 160, 0.7),
+      0 0 60px rgba(0, 229, 160, 0.3);
+  }
+}
+
+.glow-word {
+  animation: textGlow 3s ease-in-out infinite;
+  display: inline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-word {
+    animation: none;
+    color: #00E5A0;
+  }
+}
+
+@media (hover: hover) {
+  .spotlight-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .spotlight-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle 250px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(0, 229, 160, 0.07),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Animación horizontal para el indicador de scroll en ClassesScroll */
+@keyframes bounceX {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+.animate-bounce-x {
+  animation: bounceX 1s ease-in-out infinite;
+}
