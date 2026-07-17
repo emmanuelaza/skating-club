@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { PanInfo } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { SectionHeading } from './Section';
 
@@ -104,7 +105,7 @@ export function TestimonialsStack() {
     setCurrentIndex((prev) => (prev + newDirection + TESTIMONIALS.length) % TESTIMONIALS.length);
   };
 
-  const handleDragEnd = (event: any, info: PanInfo) => {
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const swipeThreshold = 50;
     if (info.offset.x < -swipeThreshold) {
       paginate(1);
@@ -152,7 +153,7 @@ export function TestimonialsStack() {
                 style={{ originX: 0.5, originY: 1 }} // Rota sutilmente desde abajo
               >
                 <Quote className="absolute right-6 top-6 size-12 rotate-180 text-primary/20" />
-                
+
                 <div>
                   <div className="mb-6 flex gap-1">
                     {[...Array(5)].map((_, i) => (
@@ -160,7 +161,7 @@ export function TestimonialsStack() {
                     ))}
                   </div>
                   <p className="line-clamp-4 text-base leading-relaxed text-muted-foreground">
-                    "{card.text}"
+                    &quot;{card.text}&quot;
                   </p>
                 </div>
 
