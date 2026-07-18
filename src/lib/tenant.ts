@@ -92,12 +92,35 @@ export async function getCurrentTenant(): Promise<Tenant | null> {
   const host = (await headers()).get('host');
   const subdomain = getSubdomainFromHost(host);
   if (subdomain) {
-    return getTenant(subdomain);
+    const t = await getTenant(subdomain);
+    if (t) return t;
   }
 
   const tenantId = (await cookies()).get(TENANT_COOKIE)?.value;
   if (tenantId) {
-    return getTenantById(tenantId);
+    const t = await getTenantById(tenantId);
+    if (t) return t;
+  }
+
+  // Fallback si es localhost o dominio de Vercel sin subdominio personalizado
+  if (host) {
+    const hostname = host.split(':')[0]?.toLowerCase() ?? '';
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    const isVercel = hostname.endsWith('.vercel.app');
+
+    if (isLocalhost || isVercel) {
+      const supabase = createAdminClient();
+      const { data } = await supabase
+        .from('tenants')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (data) {
+        return data;
+      }
+    }
   }
 
   return null;

@@ -7,7 +7,7 @@ import type { Database, UserRole } from '@/types/database';
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 /** Prefijos de rutas públicas (no requieren sesión). */
-const PUBLIC_PREFIXES = ['/nosotros', '/clases', '/planes', '/contacto', '/blog'];
+const PUBLIC_PREFIXES = ['/nosotros', '/clases', '/planes', '/contacto', '/blog', '/tienda'];
 /** Rutas de autenticación: públicas, pero un usuario autenticado se redirige fuera. */
 const AUTH_ROUTES = ['/login', '/register', '/forgot-password'];
 
@@ -60,7 +60,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   } = await supabase.auth.getUser();
 
   // Resolución de tenant por subdominio (lectura pública de sedes activas).
-  const subdomain = getSubdomainFromHost(request.headers.get('host'));
+  const host = request.headers.get('host') ?? '';
+  const subdomain = getSubdomainFromHost(host);
+  let tenantIdToSet: string | null = null;
+
   if (subdomain) {
     const { data: tenant } = await supabase
       .from('tenants')
@@ -69,8 +72,32 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       .eq('is_active', true)
       .maybeSingle<{ id: string }>();
     if (tenant) {
-      requestHeaders.set('x-tenant-id', tenant.id);
+      tenantIdToSet = tenant.id;
     }
+  }
+
+  // Fallback si es localhost o dominio de Vercel sin subdominio personalizado
+  if (!tenantIdToSet && host) {
+    const hostname = host.split(':')[0]?.toLowerCase() ?? '';
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    const isVercel = hostname.endsWith('.vercel.app');
+
+    if (isLocalhost || isVercel) {
+      const { data: firstTenant } = await supabase
+        .from('tenants')
+        .select('id')
+        .eq('is_active', true)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .maybeSingle<{ id: string }>();
+      if (firstTenant) {
+        tenantIdToSet = firstTenant.id;
+      }
+    }
+  }
+
+  if (tenantIdToSet) {
+    requestHeaders.set('x-tenant-id', tenantIdToSet);
   }
 
   // Rol del usuario (solo si hay sesión y la ruta lo necesita).
