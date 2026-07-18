@@ -2,15 +2,14 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, LayoutGrid, ShieldCheck, Truck, Lock } from 'lucide-react';
 import { PUBLIC_CONTAINER } from '@/components/public/Section';
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 16 },
+  initial: { opacity: 0, y: 12 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] },
 });
 
 const trustBadges = [
@@ -21,227 +20,162 @@ const trustBadges = [
 
 export function StoreHero() {
   return (
-    <section className="relative overflow-hidden bg-[#0A0A0A]">
-      {/* Background texture and ambient glows */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 80% 60% at 70% 60%, rgba(0,229,160,0.055) 0%, transparent 60%),
-            radial-gradient(ellipse 50% 40% at 15% 50%, rgba(0,229,160,0.025) 0%, transparent 60%)
-          `,
-        }}
-      />
-      {/* Noise overlay */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          backgroundSize: '180px',
-        }}
-      />
+    <section className="relative overflow-hidden bg-[#0A0A0A] h-[360px] sm:h-[380px] lg:h-[400px] flex items-center">
+      {/* ── BACKGROUND IMAGE & OVERLAYS ── */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/hero-store.jpg"
+          alt="Patín inline de alto rendimiento"
+          fill
+          priority
+          className="object-cover object-right sm:object-right-center lg:object-right"
+          style={{
+            filter: 'brightness(0.95) contrast(1.02)',
+          }}
+        />
 
-      <div className={`${PUBLIC_CONTAINER} relative`}>
-        {/* ── DESKTOP: two-column layout ── */}
-        <div className="hidden min-h-[340px] items-center gap-8 py-12 lg:flex xl:gap-16">
-          {/* Left column — 42% */}
-          <div className="flex w-[42%] shrink-0 flex-col gap-6">
-            <motion.div {...fadeUp(0.1)}>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#00E5A0]">
-                Tienda oficial
-              </p>
-              <h1 className="font-display text-[2.6rem] font-black leading-[1.05] tracking-tight text-[#F5F5F5] xl:text-[3.1rem]">
-                Equipo de{' '}
-                <span
-                  className="text-[#00E5A0]"
-                  style={{ textShadow: '0 0 32px rgba(0,229,160,0.35)' }}
-                >
-                  alto rendimiento
-                </span>
-              </h1>
-            </motion.div>
+        {/* Green ambient glow behind the skate area */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute right-0 top-1/4 size-[400px] rounded-full bg-[#00E5A0]/10 blur-[120px] mix-blend-screen hidden lg:block"
+          style={{
+            animation: 'glowPulse 6s ease-in-out infinite alternate',
+          }}
+        />
 
-            <motion.p
-              {...fadeUp(0.2)}
-              className="max-w-sm text-[0.95rem] leading-relaxed text-[#888888]"
-            >
-              Patines, protecciones y accesorios seleccionados para cada nivel.
-              Todo lo que necesitas para rodar más rápido.
-            </motion.p>
+        {/* Noise overlay */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            backgroundSize: '180px',
+          }}
+        />
 
-            {/* CTAs */}
-            <motion.div {...fadeUp(0.3)} className="flex items-center gap-3">
-              <a
-                href="#productos"
-                id="store-cta-primary"
-                className="group flex items-center gap-2 rounded-xl border border-[#00E5A0] bg-transparent px-5 py-2.5 text-sm font-semibold text-[#00E5A0] transition-all duration-300 hover:bg-[#00E5A0] hover:text-[#0A0A0A]"
-              >
-                Explorar productos
-                <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-              </a>
-              <a
-                href="#categorias"
-                id="store-cta-secondary"
-                className="flex items-center gap-2 rounded-xl border border-[#222222] bg-transparent px-5 py-2.5 text-sm font-semibold text-[#888888] transition-all duration-300 hover:border-[#444] hover:text-[#F5F5F5]"
-              >
-                <LayoutGrid className="size-4" />
-                Ver categorías
-              </a>
-            </motion.div>
+        {/* ── GRADIENTS FOR IMMERSIVE INTEGRATION ── */}
+        
+        {/* Desktop horizontal gradient (Left -> Right) to blend background to solid #0A0A0A */}
+        <div 
+          className="absolute inset-0 z-10 hidden lg:block"
+          style={{
+            background: 'linear-gradient(to right, #0A0A0A 0%, #0A0A0A 32%, rgba(10,10,10,0.85) 45%, rgba(10,10,10,0.4) 60%, transparent 85%)'
+          }}
+        />
 
-            {/* Trust badges */}
-            <motion.div {...fadeUp(0.4)} className="flex items-center gap-5">
-              {trustBadges.map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-1.5">
-                  <Icon className="size-3.5 text-[#00E5A0]/60" />
-                  <span className="text-[11px] text-[#888888]">{label}</span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
+        {/* Tablet horizontal gradient */}
+        <div 
+          className="absolute inset-0 z-10 hidden sm:block lg:hidden"
+          style={{
+            background: 'linear-gradient(to right, #0A0A0A 0%, #0A0A0A 20%, rgba(10,10,10,0.8) 45%, rgba(10,10,10,0.3) 70%, transparent 95%)'
+          }}
+        />
 
-          {/* Right column — 58% */}
-          <motion.div
-            className="relative flex-1"
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {/* Glow behind image */}
-            <div
-              aria-hidden
-              className="absolute inset-0 rounded-2xl"
-              style={{
-                background: 'radial-gradient(ellipse 70% 60% at 60% 55%, rgba(0,229,160,0.1) 0%, transparent 65%)',
-                animation: 'heroGlow 4s ease-in-out infinite',
-              }}
-            />
-            <div className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: '16/9' }}>
-              <Image
-                src="/hero-store.jpg"
-                alt="Patín inline de alto rendimiento con ruedas de luz verde"
-                fill
-                priority
-                sizes="(min-width: 1024px) 58vw"
-                className="object-cover"
-                style={{
-                  filter: 'brightness(1.05) contrast(1.02)',
-                }}
-              />
-              {/* Subtle vignette to blend edges */}
-              <div
-                aria-hidden
-                className="absolute inset-0"
-                style={{
-                  background: 'linear-gradient(to right, rgba(10,10,10,0.25) 0%, transparent 25%, transparent 75%, rgba(10,10,10,0.15) 100%), linear-gradient(to bottom, transparent 60%, rgba(10,10,10,0.5) 100%)',
-                }}
-              />
-            </div>
-          </motion.div>
-        </div>
+        {/* Mobile vertical overlay for absolute readability */}
+        <div 
+          className="absolute inset-0 z-10 block sm:hidden"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.7) 40%, rgba(10,10,10,0.9) 80%, #0A0A0A 100%)'
+          }}
+        />
 
-        {/* ── MOBILE: purpose-built layout ── */}
-        <div className="flex flex-col items-center pt-8 pb-10 lg:hidden">
-          {/* Image — 47% of viewport height */}
-          <motion.div
-            className="relative w-full max-w-xs"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{ aspectRatio: '16/9' }}
-          >
-            <div
-              aria-hidden
-              className="absolute inset-0"
-              style={{
-                background: 'radial-gradient(ellipse 80% 70% at 60% 60%, rgba(0,229,160,0.12) 0%, transparent 70%)',
-                animation: 'heroGlow 4s ease-in-out infinite',
-              }}
-            />
-            <Image
-              src="/hero-store.jpg"
-              alt="Patín inline de alto rendimiento"
-              fill
-              priority
-              sizes="100vw"
-              className="object-contain"
-            />
+        {/* Top fade (for navbar transition) */}
+        <div 
+          className="absolute inset-x-0 top-0 z-10 h-20"
+          style={{
+            background: 'linear-gradient(to bottom, #0A0A0A 0%, transparent 100%)'
+          }}
+        />
+
+        {/* Bottom fade (for content transition - extremely smooth) */}
+        <div 
+          className="absolute inset-x-0 bottom-0 z-10 h-32"
+          style={{
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(10,10,10,0.4) 30%, rgba(10,10,10,0.85) 70%, #0A0A0A 100%)'
+          }}
+        />
+      </div>
+
+      {/* ── CONTENT OVER LAYOUT ── */}
+      <div className={`${PUBLIC_CONTAINER} relative z-20 w-full`}>
+        <div className="max-w-md md:max-w-lg lg:max-w-xl flex flex-col gap-5 sm:gap-6 text-left">
+          
+          {/* Subheading */}
+          <motion.div {...fadeUp(0.05)}>
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#00E5A0]">
+              Tienda Oficial
+            </span>
           </motion.div>
 
-          {/* Text */}
-          <motion.div {...fadeUp(0.15)} className="mt-6 w-full text-center">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#00E5A0]">
-              Tienda oficial
-            </p>
-            <h1 className="font-display text-[2rem] font-black leading-[1.1] tracking-tight text-[#F5F5F5]">
-              Equipo de{' '}
+          {/* Heading */}
+          <motion.div {...fadeUp(0.15)}>
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-[2.85rem] font-bold leading-[1.1] tracking-tight text-[#F5F5F5]">
+              Equipamiento de <br className="hidden sm:inline" />
               <span
                 className="text-[#00E5A0]"
-                style={{ textShadow: '0 0 24px rgba(0,229,160,0.35)' }}
+                style={{ textShadow: '0 0 40px rgba(0,229,160,0.2)' }}
               >
                 alto rendimiento
               </span>
             </h1>
           </motion.div>
 
+          {/* Description */}
           <motion.p
             {...fadeUp(0.25)}
-            className="mt-3 max-w-xs text-center text-sm leading-relaxed text-[#888888]"
+            className="text-xs sm:text-sm leading-relaxed text-[#888888] max-w-sm sm:max-w-md"
           >
-            Todo lo que necesitas para rodar más rápido, protegido y con estilo.
+            Navega por nuestro catálogo exclusivo de patines profesionales, 
+            protecciones certificadas y repuestos diseñados para rodar sin límites.
           </motion.p>
 
-          {/* Mobile CTAs */}
-          <motion.div {...fadeUp(0.35)} className="mt-6 flex w-full max-w-xs flex-col gap-3">
+          {/* Buttons */}
+          <motion.div {...fadeUp(0.35)} className="flex items-center gap-3 mt-1">
             <a
               href="#productos"
-              id="store-cta-primary-mobile"
-              className="flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-[#00E5A0] bg-transparent text-base font-semibold text-[#00E5A0] transition-all duration-300 active:bg-[#00E5A0] active:text-[#0A0A0A]"
+              id="store-cta-primary"
+              className="group flex items-center gap-2 rounded-lg border border-[#00E5A0] bg-[#00E5A0] px-4.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#0A0A0A] transition-all duration-300 hover:bg-[#00C988] hover:border-[#00C988] hover:shadow-[0_0_24px_rgba(0,229,160,0.3)]"
             >
               Explorar productos
-              <ArrowRight className="size-4" />
+              <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
             </a>
             <a
               href="#categorias"
-              id="store-cta-secondary-mobile"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-[#222222] bg-transparent text-base font-semibold text-[#888888] transition-all duration-300 active:border-[#444]"
+              id="store-cta-secondary"
+              className="flex items-center gap-2 rounded-lg border border-[#222222] bg-[#111111]/80 backdrop-blur-sm px-4.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#888888] transition-all duration-300 hover:border-[#444] hover:text-[#F5F5F5]"
             >
-              <LayoutGrid className="size-4" />
+              <LayoutGrid className="size-3.5" />
               Ver categorías
             </a>
           </motion.div>
 
-          {/* Mobile trust badges */}
-          <motion.div
-            {...fadeUp(0.45)}
-            className="mt-6 flex items-center justify-center gap-4"
+          {/* Indicators */}
+          <motion.div 
+            {...fadeUp(0.45)} 
+            className="flex items-center gap-4 sm:gap-5 mt-2 border-t border-[#222222]/40 pt-4 max-w-xs sm:max-w-sm"
           >
             {trustBadges.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-1">
-                <Icon className="size-3 text-[#00E5A0]/60" />
-                <span className="text-[10px] text-[#888888]">{label}</span>
+              <div key={label} className="flex items-center gap-1.5">
+                <Icon className="size-3.5 text-[#00E5A0]/50" />
+                <span className="text-[10px] text-[#888888] font-medium">{label}</span>
               </div>
             ))}
           </motion.div>
+
         </div>
       </div>
 
-      {/* Bottom fade into next section */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-20"
-        style={{
-          background: 'linear-gradient(to bottom, transparent 0%, #0A0A0A 100%)',
-        }}
-      />
-
-      {/* CSS for breathing glow animation */}
-      <style jsx>{`
-        @keyframes heroGlow {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
+      {/* Global CSS for Glow Pulse Animation */}
+      <style jsx global>{`
+        @keyframes glowPulse {
+          from {
+            transform: scale(0.95) translate(0px, 0px);
+            opacity: 0.8;
+          }
+          to {
+            transform: scale(1.05) translate(10px, -10px);
+            opacity: 1;
+          }
         }
       `}</style>
     </section>
