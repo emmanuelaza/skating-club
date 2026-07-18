@@ -119,7 +119,25 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
           </button>
         </div>
 
-        <MobileMenu clubName={clubName} />
+        {/* Mobile controls & Menu */}
+        <div className="flex items-center gap-1 lg:hidden">
+          {/* Cart (Mobile) */}
+          <button
+            type="button"
+            onClick={openCart}
+            className="relative flex size-11 items-center justify-center rounded-md text-[#888888] transition-colors hover:text-[#00E5A0]"
+            aria-label="Carrito"
+          >
+            <ShoppingCart className="size-5" />
+            {itemCount > 0 && (
+              <span className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-[#00E5A0] text-[9px] font-bold text-[#0A0A0A]">
+                {itemCount}
+              </span>
+            )}
+          </button>
+          
+          <MobileMenu clubName={clubName} />
+        </div>
       </div>
     </header>
   );

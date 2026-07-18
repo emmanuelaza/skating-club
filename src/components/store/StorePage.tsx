@@ -2,20 +2,20 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Home, ChevronRight } from 'lucide-react';
+import { Home, ChevronRight, ShoppingCart } from 'lucide-react';
 import { StoreHero } from './StoreHero';
 import { FilterBar } from './FilterBar';
 import { ProductCard } from './ProductCard';
-import { ProductDetail } from './ProductDetail';
 import { TrustBand } from './TrustBand';
 import { CartDrawer } from './CartDrawer';
-import { PRODUCTS, type Product } from './products-data';
+import { PRODUCTS } from './products-data';
+import { useCart } from './CartProvider';
 import { PUBLIC_CONTAINER } from '@/components/public/Section';
 
 export function StorePage() {
   const [activeCategory, setActiveCategory] = React.useState('todos');
   const [sortOrder, setSortOrder] = React.useState('popular');
-  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
+  const { openCart, itemCount } = useCart();
 
   const filteredProducts = React.useMemo(() => {
     let list = activeCategory === 'todos'
@@ -70,7 +70,6 @@ export function StorePage() {
                 key={product.id}
                 product={product}
                 index={i}
-                onOpenDetail={setSelectedProduct}
               />
             ))}
           </div>
@@ -85,14 +84,23 @@ export function StorePage() {
       {/* Trust band */}
       <TrustBand />
 
-      {/* Product detail modal */}
-      <ProductDetail
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
-
       {/* Cart drawer */}
       <CartDrawer />
+
+      {/* Mobile Floating Action Button (FAB) for Cart - High UX accessibility */}
+      {itemCount > 0 && (
+        <button
+          type="button"
+          onClick={openCart}
+          className="fixed bottom-6 right-6 z-40 flex size-14 items-center justify-center rounded-full bg-[#00E5A0] text-[#0A0A0A] shadow-[0_8px_24px_rgba(0,229,160,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 sm:hidden"
+          aria-label="Abrir carrito flotante"
+        >
+          <ShoppingCart className="size-6" />
+          <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-[#F5F5F5] text-[10px] font-bold text-[#0A0A0A] border-2 border-[#00E5A0]">
+            {itemCount}
+          </span>
+        </button>
+      )}
     </>
   );
 }
