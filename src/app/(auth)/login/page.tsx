@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import { signInAction } from '@/lib/actions/auth';
 import { signInSchema, type SignInInput } from '@/lib/validations/auth';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,15 @@ export default function LoginPage() {
 
   return (
     <Card>
+      <div className="px-6 pt-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="size-3.5" />
+          Volver al inicio
+        </Link>
+      </div>
       <CardHeader>
         <CardTitle>Iniciar sesión</CardTitle>
         <CardDescription>Ingresa a tu cuenta para continuar.</CardDescription>

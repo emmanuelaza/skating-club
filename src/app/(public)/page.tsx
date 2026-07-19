@@ -225,7 +225,7 @@ export default function PublicHomePage() {
 
         {/* ─── MOBILE only: imagen fotográfica inmersiva ─── */}
         {/* Capa 1 — Imagen */}
-        <div className="absolute inset-0 z-0 md:hidden" aria-hidden="true">
+        <div className="absolute inset-0 z-[1] w-full h-full md:hidden" aria-hidden="true">
           <Image
             src="/hero-mobile.jpg"
             alt=""
@@ -239,7 +239,7 @@ export default function PublicHomePage() {
 
         {/* Capa 2 — Overlay vertical: oscurece la parte superior para el texto */}
         <div
-          className="pointer-events-none absolute inset-0 z-[1] md:hidden"
+          className="pointer-events-none absolute inset-0 z-[2] md:hidden"
           aria-hidden="true"
           style={{
             background:
@@ -249,7 +249,7 @@ export default function PublicHomePage() {
 
         {/* Capa 3 — Overlay lateral izquierdo sutil */}
         <div
-          className="pointer-events-none absolute inset-0 z-[2] md:hidden"
+          className="pointer-events-none absolute inset-0 z-[3] md:hidden"
           aria-hidden="true"
           style={{
             background:
@@ -259,7 +259,7 @@ export default function PublicHomePage() {
 
         {/* Capa 5 — Máscara de transición inferior (35% desde abajo) */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[35%] md:hidden"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[35%] md:hidden"
           aria-hidden="true"
           style={{
             background:
@@ -268,7 +268,7 @@ export default function PublicHomePage() {
         />
 
         {/* Capa 6 — Líneas de velocidad extendidas (CSS puro) */}
-        <div className="pointer-events-none absolute inset-0 z-[4] md:hidden" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-0 z-[5] md:hidden" aria-hidden="true">
           {/* 4 líneas delgadas alineadas visualmente con las de la imagen */}
           {[
             { top: '58%', opacity: 0.55 },
@@ -292,7 +292,7 @@ export default function PublicHomePage() {
         {/* ─── Capa 4: Contenido del hero ─── */}
         <div
           className={cn(
-            'relative z-[5] w-full',
+            'relative z-[10] w-full',
             // MOBILE: alineado arriba con padding top optimizado (navbar h-16 + 16px)
             'flex flex-col items-start px-5 pt-[80px]',
             // DESKTOP: centrado como antes
@@ -431,11 +431,18 @@ export default function PublicHomePage() {
         </div>
 
         {/* Stats bajo las cards */}
-        <div className="mt-14 grid grid-cols-3 gap-4 border-t border-border pt-10">
+        <div className="mt-14 grid grid-cols-1 gap-8 pt-10 border-t border-border sm:grid-cols-3 sm:gap-6 md:gap-12">
           {OFFERING_STATS.map((stat, i) => (
-            <FadeIn key={stat.value} delay={i * 0.1} className={cn('text-center', i > 0 && 'border-l border-border')}>
+            <FadeIn
+              key={stat.value}
+              delay={i * 0.1}
+              className={cn(
+                'text-center px-4 py-2 flex flex-col items-center justify-center',
+                i > 0 && 'sm:border-l sm:border-border'
+              )}
+            >
               <p className="font-display text-3xl font-black text-primary sm:text-[2.5rem]">{stat.value}</p>
-              <p className="mt-1 text-xs leading-snug text-muted-foreground sm:text-[13px]">{stat.label}</p>
+              <p className="mt-2 text-xs leading-snug text-muted-foreground sm:text-[13px] max-w-[200px] sm:max-w-none px-2">{stat.label}</p>
             </FadeIn>
           ))}
         </div>

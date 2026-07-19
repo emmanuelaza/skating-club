@@ -39,7 +39,7 @@ export function PricingCard({
     <SpotlightCard className="h-full">
       <div
         className={cn(
-          'relative flex h-full flex-col rounded-lg border bg-[#111111] p-8 transition-colors duration-200',
+          'relative flex h-full flex-col rounded-lg border bg-[#111111] p-6 sm:p-8 transition-colors duration-200',
           recommended
             ? 'border-primary/50 shadow-[0_8px_32px_rgba(0,229,160,0.12)]'
             : 'border-[#222222] hover:border-primary/30',
@@ -62,11 +62,14 @@ export function PricingCard({
 
         {/* Precio */}
         <div className="mt-6 mb-6">
-          <div className="flex items-baseline gap-1">
-            <span className="font-display text-4xl font-black text-primary transition-all duration-300">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span
+              className="font-display font-black text-primary transition-all duration-300 leading-none"
+              style={{ fontSize: 'clamp(1.35rem, 5.5vw, 2rem)' }}
+            >
               {formatCOP(displayPrice)}
             </span>
-            <span className="text-sm text-muted-foreground">/mes</span>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">/mes</span>
           </div>
           <div
             className={cn(

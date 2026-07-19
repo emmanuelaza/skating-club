@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Mail, Lock, Eye, EyeOff, Loader2, MailCheck } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, Loader2, MailCheck, ArrowLeft } from 'lucide-react';
 import { signUpAction } from '@/lib/actions/auth';
 import { signUpSchema, type SignUpInput } from '@/lib/validations/auth';
 import { Button } from '@/components/ui/button';
@@ -53,6 +53,15 @@ export default function RegisterPage() {
   if (submittedEmail) {
     return (
       <Card>
+        <div className="px-6 pt-6">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="size-3.5" />
+            Volver al inicio
+          </Link>
+        </div>
         <CardHeader className="items-center text-center">
           <span className="mb-2 flex size-12 items-center justify-center rounded-full bg-success/10 text-success">
             <MailCheck className="size-6" aria-hidden />
@@ -73,6 +82,15 @@ export default function RegisterPage() {
 
   return (
     <Card>
+      <div className="px-6 pt-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="size-3.5" />
+          Volver al inicio
+        </Link>
+      </div>
       <CardHeader>
         <CardTitle>Únete al club</CardTitle>
         <CardDescription>Regístrate para ser miembro del club.</CardDescription>
