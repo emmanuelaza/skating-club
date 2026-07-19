@@ -155,3 +155,26 @@
 .animate-bounce-x {
   animation: bounceX 1s ease-in-out infinite;
 }
+
+/* Glow pulsante para el ambient glow del StoreHero */
+@keyframes glowPulse {
+  from {
+    transform: scale(0.95) translate(0px, 0px);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.05) translate(10px, -10px);
+    opacity: 1;
+  }
+}
+
+/* Shimmer skeleton loader */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #1a1a1a 25%, #222222 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

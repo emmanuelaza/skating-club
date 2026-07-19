@@ -35,7 +35,7 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
     >
       <div className={cn(PUBLIC_CONTAINER, 'flex h-16 items-center justify-between gap-4')}>
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
+        <Link href="/" prefetch className="flex items-center gap-2 shrink-0">
           <span className="flex size-8 items-center justify-center rounded-md bg-[#00E5A0]/10 text-[#00E5A0]">
             <Snowflake className="size-5" aria-hidden />
           </span>
@@ -53,6 +53,7 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch
                 className={cn(
                   'relative rounded-md px-3 py-2 text-sm font-medium transition-colors',
                   active ? 'text-[#00E5A0]' : 'text-[#888888] hover:text-[#F5F5F5]',

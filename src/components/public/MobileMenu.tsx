@@ -93,6 +93,7 @@ export function MobileMenu({ clubName }: { clubName: string }) {
                         <Link
                           key={item.href}
                           href={item.href}
+                          prefetch
                           onClick={() => setOpen(false)}
                           className={cn(
                             'py-3 font-display text-3xl font-semibold tracking-tight transition-colors',

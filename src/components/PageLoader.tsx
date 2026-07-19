@@ -1,51 +1,64 @@
 'use client';
 
 import * as React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+
+const SESSION_KEY = 'sk_loaded';
 
 export default function PageLoader() {
-  const [phase, setPhase] = React.useState<'visible' | 'animating' | 'hidden'>('visible');
+  const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
-    if (sessionStorage.getItem('sk_loaded')) {
-      setPhase('hidden');
-      return;
-    }
+    // Si ya cargó en esta sesión, omitimos el loader de primera visita
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+    
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
 
-    // Fase 1: mostrar nombre (400ms)
-    // Fase 2: expandir línea (600ms)
-    // Fase 3: fade out todo (300ms)
-    // Fase 4: desmontar y setear sessionStorage
+    setVisible(true);
+    
+    const timeout = setTimeout(() => {
+      setVisible(false);
+      sessionStorage.setItem(SESSION_KEY, '1');
+    }, 1800);
 
-    const t1 = setTimeout(() => setPhase('animating'), 400);
-    const t2 = setTimeout(() => {
-      setPhase('hidden');
-      sessionStorage.setItem('sk_loaded', '1');
-    }, 1500);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    return () => clearTimeout(timeout);
   }, []);
 
-  if (phase === 'hidden') return null;
-
   return (
-    <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-[#0A0A0A] transition-opacity duration-300 ${
-        phase === 'animating' ? 'opacity-0' : 'opacity-100'
-      }`}
-    >
-      {/* Nombre del club */}
-      <span className="animate-fade-in font-display text-2xl font-bold uppercase tracking-[0.3em] text-white">
-        Skating Club
-      </span>
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          key="first-visit-loader"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0A0A0A]"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="flex flex-col items-center gap-4">
+            {/* Logo o Marca */}
+            <motion.span
+              className="font-display text-2xl sm:text-3xl font-black uppercase tracking-[0.35em] text-[#F5F5F5]"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              Skating Club
+            </motion.span>
 
-      {/* Línea cyan que se expande */}
-      <div
-        className="h-[2px] bg-accent transition-all duration-700 ease-out"
-        style={{ width: phase === 'visible' ? '0px' : '180px' }}
-      />
-    </div>
+            {/* Línea de Carga Premium de Acero Verde Menta */}
+            <div className="relative h-[2px] w-[160px] overflow-hidden rounded-full bg-[#222222]">
+              <motion.div
+                className="absolute inset-y-0 left-0 bg-[#00E5A0]"
+                style={{ boxShadow: '0 0 10px #00E5A0' }}
+                initial={{ width: '0%' }}
+                animate={{ width: '100%' }}
+                transition={{ duration: 1.3, ease: [0.65, 0, 0.35, 1], delay: 0.2 }}
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

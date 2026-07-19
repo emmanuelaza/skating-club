@@ -20,7 +20,7 @@ const trustBadges = [
 
 export function StoreHero() {
   return (
-    <section className="relative overflow-hidden bg-[#0A0A0A] h-[360px] sm:h-[380px] lg:h-[400px] flex items-center">
+    <section className="relative overflow-hidden bg-[#0A0A0A] min-h-[340px] sm:min-h-[360px] lg:min-h-[400px] py-14 sm:py-16 lg:py-20 flex items-center">
       {/* ── BACKGROUND IMAGE & OVERLAYS ── */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -28,9 +28,9 @@ export function StoreHero() {
           alt="Patín inline de alto rendimiento"
           fill
           priority
-          className="object-cover object-right sm:object-right-center lg:object-right"
+          className="object-cover object-[80%_center] sm:object-right-center lg:object-right"
           style={{
-            filter: 'brightness(0.95) contrast(1.02)',
+            filter: 'brightness(0.9) contrast(1.02)',
           }}
         />
 
@@ -130,11 +130,11 @@ export function StoreHero() {
           </motion.p>
 
           {/* Buttons */}
-          <motion.div {...fadeUp(0.35)} className="flex items-center gap-3 mt-1">
+          <motion.div {...fadeUp(0.35)} className="flex flex-wrap items-center gap-3 mt-1">
             <a
               href="#productos"
               id="store-cta-primary"
-              className="group flex items-center gap-2 rounded-lg border border-[#00E5A0] bg-[#00E5A0] px-4.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#0A0A0A] transition-all duration-300 hover:bg-[#00C988] hover:border-[#00C988] hover:shadow-[0_0_24px_rgba(0,229,160,0.3)]"
+              className="group flex items-center gap-2 rounded-lg border border-[#00E5A0] bg-[#00E5A0] px-[18px] py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#0A0A0A] transition-all duration-300 hover:bg-[#00C988] hover:border-[#00C988] hover:shadow-[0_0_24px_rgba(0,229,160,0.3)]"
             >
               Explorar productos
               <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -142,7 +142,7 @@ export function StoreHero() {
             <a
               href="#categorias"
               id="store-cta-secondary"
-              className="flex items-center gap-2 rounded-lg border border-[#222222] bg-[#111111]/80 backdrop-blur-sm px-4.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#888888] transition-all duration-300 hover:border-[#444] hover:text-[#F5F5F5]"
+              className="flex items-center gap-2 rounded-lg border border-[#222222] bg-[#111111]/80 backdrop-blur-sm px-[18px] py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#888888] transition-all duration-300 hover:border-[#444] hover:text-[#F5F5F5]"
             >
               <LayoutGrid className="size-3.5" />
               Ver categorías
@@ -165,19 +165,6 @@ export function StoreHero() {
         </div>
       </div>
 
-      {/* Global CSS for Glow Pulse Animation */}
-      <style jsx global>{`
-        @keyframes glowPulse {
-          from {
-            transform: scale(0.95) translate(0px, 0px);
-            opacity: 0.8;
-          }
-          to {
-            transform: scale(1.05) translate(10px, -10px);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </section>
   );
 }

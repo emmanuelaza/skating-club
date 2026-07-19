@@ -19,10 +19,10 @@ interface SectionProps {
   children: React.ReactNode;
 }
 
-/** Sección con fondo alternable y espaciado generoso (py-24 en desktop). */
+/** Sección con fondo alternable y espaciado generoso (py-20 en desktop). */
 export function Section({ alt = false, className, children }: SectionProps) {
   return (
-    <section className={cn('py-16 sm:py-24', alt ? 'bg-card' : 'bg-background', className)}>
+    <section className={cn('py-12 sm:py-20', alt ? 'bg-card' : 'bg-background', className)}>
       <div className={PUBLIC_CONTAINER}>{children}</div>
     </section>
   );
@@ -36,13 +36,18 @@ interface PageHeroProps {
 /** Hero compacto para páginas internas (nosotros, clases, planes, blog…). */
 export function PageHero({ title, subtitle }: PageHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.15),transparent_60%)] py-20 sm:py-28">
+    <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.15),transparent_60%)] py-14 sm:py-24">
       <div className={cn(PUBLIC_CONTAINER, 'flex flex-col items-center text-center')}>
-        <h1 className="max-w-3xl font-display text-4xl font-black leading-[1.05] tracking-tight text-foreground sm:text-[3.5rem]">
+        <h1
+          className="max-w-3xl font-display font-black leading-[1.05] tracking-tight text-foreground"
+          style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)' }}
+        >
           <TextReveal text={title} />
         </h1>
         {subtitle ? (
-          <p className="mt-5 max-w-[600px] text-lg text-muted-foreground">{subtitle}</p>
+          <p className="mt-3 max-w-[600px] text-sm leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
+            {subtitle}
+          </p>
         ) : null}
       </div>
     </section>

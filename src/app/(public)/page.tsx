@@ -293,8 +293,8 @@ export default function PublicHomePage() {
         <div
           className={cn(
             'relative z-[5] w-full',
-            // MOBILE: alineado arriba con padding top = navbar (64px) + 24px
-            'flex flex-col items-start px-5 pt-[88px]',
+            // MOBILE: alineado arriba con padding top optimizado (navbar h-16 + 16px)
+            'flex flex-col items-start px-5 pt-[80px]',
             // DESKTOP: centrado como antes
             'md:mx-auto md:flex md:max-w-4xl md:flex-col md:items-center md:px-6 md:pb-16 md:pt-32 md:text-center',
             'lg:py-0',
@@ -324,19 +324,19 @@ export default function PublicHomePage() {
           {/* Subtítulo */}
           <p
             className="mb-6 leading-relaxed text-white/70 md:mb-8 md:text-muted-foreground"
-            style={{ fontSize: '14px', maxWidth: '260px' }}
+            style={{ fontSize: '14px', maxWidth: '280px' }}
           >
             Clases, membresías y comunidad para patinadores de todos los niveles.
           </p>
 
-          {/* Botones */}
-          <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:justify-center md:gap-4">
+          {/* Botones - Fila horizontal a partir de 375px de ancho de pantalla */}
+          <div className="flex w-full flex-col gap-2.5 min-[375px]:flex-row min-[375px]:w-auto md:justify-center md:gap-4">
             {/* Primario: verde menta, texto negro en mobile */}
-            <MagneticButton className="w-full md:w-auto">
+            <MagneticButton className="w-full min-[375px]:w-auto">
               <Button
                 asChild
                 size="lg"
-                className="w-full py-3 text-sm md:py-4 md:text-base"
+                className="w-full min-[375px]:w-auto py-2.5 sm:py-3 text-xs sm:text-sm md:py-4 md:text-base font-semibold"
               >
                 <Link href="/register">Únete al club</Link>
               </Button>
@@ -346,7 +346,7 @@ export default function PublicHomePage() {
               asChild
               size="lg"
               variant="outline"
-              className="w-full border-white/30 py-3 text-sm text-white hover:border-primary hover:text-primary md:w-auto md:border-border md:py-4 md:text-base md:text-foreground"
+              className="w-full min-[375px]:w-auto border-white/30 py-2.5 sm:py-3 text-xs sm:text-sm text-white hover:border-primary hover:text-primary md:border-border md:py-4 md:text-base md:text-foreground font-semibold"
             >
               <Link href={'/clases' as Route}>Ver clases</Link>
             </Button>
