@@ -49,12 +49,15 @@ export function PricingPlans({ plans }: { plans: PublicPlan[] }) {
       </div>
 
       {/* Grid de planes */}
-      <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch gap-6 max-w-6xl mx-auto">
         {plans.map((plan, index) => (
           <FadeIn
             key={plan.id}
             delay={index * 0.1}
-            className={cn(plan.recommended && 'order-first md:order-none')}
+            className={cn(
+              plan.recommended && 'order-first lg:order-none',
+              index === 2 && 'sm:col-span-2 sm:mx-auto sm:max-w-md lg:col-span-1 lg:mx-0 lg:max-w-none w-full'
+            )}
           >
             <PricingCard
               name={plan.name}
