@@ -71,18 +71,11 @@ const CLASS_TYPES = [
     image: '/images/clase_iniciacion_infantil.jpg',
   },
   {
-    name: 'Velocidad',
-    level: 'Intermedio',
-    duration: 90,
-    desc: 'Entrenamiento de velocidad y resistencia para competencia sobre ruedas.',
-    image: '/images/clase_velocidad.jpg',
-  },
-  {
     name: 'Patinaje Infantil',
     level: 'Principiante',
     duration: 60,
     desc: 'Juegos y técnicas dinámicas en movimiento para desarrollar velocidad y destreza en la pista.',
-    image: '/images/clase_infantil_3.jpg',
+    image: '/images/clase_patinaje_infantil.jpg',
   },
   {
     name: 'Slalom',
@@ -96,7 +89,7 @@ const CLASS_TYPES = [
     level: 'Principiante',
     duration: 75,
     desc: 'Figuras, coreografías y expresión corporal sobre ruedas. Desarrolla gracia, equilibrio y elegancia.',
-    image: 'https://images.unsplash.com/photo-1535525153412-5a42439a210d?w=800&q=80',
+    image: '/images/clase_artistico.jpg',
   },
   {
     name: 'Freestyle',
