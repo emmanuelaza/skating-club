@@ -24,11 +24,11 @@
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 96%;
 
-    /* Accent #00E5A0 (verde menta - nueva paleta) */
-    --primary: 160 100% 45%;
-    --primary-foreground: 0 0% 4%;
+    /* Accent Violeta a Cyan */
+    --primary: 262 83% 65%;
+    --primary-foreground: 0 0% 100%;
     /* Accent hover #00C988 */
-    --primary-hover: 160 100% 39%;
+    --primary-hover: 189 94% 43%;
 
     /* Surface elevated para superficies secundarias */
     --secondary: 0 0% 10%;
@@ -59,10 +59,10 @@
     --border: 0 0% 13%;
     --input: 0 0% 13%;
     /* Ring = accent */
-    --ring: 160 100% 45%;
+    --ring: 262 83% 65%;
 
-    /* Glow del acento — rgba(0,229,160,0.15) */
-    --accent-glow: rgba(0, 229, 160, 0.15);
+    /* Glow del acento — rgba(167, 139, 250, 0.15) */
+    --accent-glow: rgba(167, 139, 250, 0.15);
 
     /* Cards 8px -> lg; botones 6px -> md; inputs 4px -> sm */
     --radius: 0.5rem;
@@ -92,14 +92,14 @@
 @keyframes textGlow {
   0%,
   100% {
-    color: #00E5A0;
-    text-shadow: 0 0 20px rgba(0, 229, 160, 0.4);
+    color: #a78bfa;
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
   }
   50% {
-    color: #66ffcc;
+    color: #22d3ee;
     text-shadow:
-      0 0 30px rgba(0, 229, 160, 0.7),
-      0 0 60px rgba(0, 229, 160, 0.3);
+      0 0 30px rgba(34, 211, 238, 0.7),
+      0 0 60px rgba(167, 139, 250, 0.3);
   }
 }
 
@@ -111,7 +111,7 @@
 @media (prefers-reduced-motion: reduce) {
   .glow-word {
     animation: none;
-    color: #00E5A0;
+    color: #a78bfa;
   }
 }
 
@@ -126,7 +126,7 @@
     inset: 0;
     background: radial-gradient(
       circle 250px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(0, 229, 160, 0.07),
+      rgba(167, 139, 250, 0.08),
       transparent 70%
     );
     opacity: 0;

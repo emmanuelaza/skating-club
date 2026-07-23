@@ -36,7 +36,7 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
       <div className={cn(PUBLIC_CONTAINER, 'flex h-16 items-center justify-between gap-4')}>
         {/* Logo */}
         <Link href="/" prefetch className="flex items-center gap-2 shrink-0">
-          <span className="flex size-8 items-center justify-center rounded-md bg-[#00E5A0]/10 text-[#00E5A0]">
+          <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary">
             <Snowflake className="size-5" aria-hidden />
           </span>
           <span className="font-display text-lg font-bold tracking-tight text-[#F5F5F5]">
@@ -56,12 +56,12 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
                 prefetch
                 className={cn(
                   'relative rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                  active ? 'text-[#00E5A0]' : 'text-[#888888] hover:text-[#F5F5F5]',
+                  active ? 'text-primary' : 'text-[#888888] hover:text-[#F5F5F5]',
                 )}
               >
                 {item.label}
                 {active && (
-                  <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-[#00E5A0]" />
+                  <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-primary" />
                 )}
               </Link>
             );
@@ -78,14 +78,14 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
                   autoFocus
                   placeholder="Buscar productos"
                   onBlur={() => setSearchOpen(false)}
-                  className="h-8 w-48 rounded-md border border-[#222222] bg-[#111111] pl-3 pr-8 text-sm text-[#F5F5F5] placeholder-[#888888] outline-none focus:border-[#00E5A0] transition-colors"
+                  className="h-8 w-48 rounded-md border border-[#222222] bg-[#111111] pl-3 pr-8 text-sm text-[#F5F5F5] placeholder-[#888888] outline-none focus:border-primary transition-colors"
                 />
               ) : null}
               <button
                 type="button"
                 onClick={() => setSearchOpen((o) => !o)}
                 className={cn(
-                  'flex size-8 items-center justify-center rounded-md border border-[#222222] bg-[#111111] text-[#888888] transition-colors hover:border-[#00E5A0] hover:text-[#00E5A0]',
+                  'flex size-8 items-center justify-center rounded-md border border-[#222222] bg-[#111111] text-[#888888] transition-colors hover:border-primary hover:text-primary',
                   searchOpen && '-ml-8',
                 )}
                 aria-label="Buscar"
@@ -98,7 +98,7 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
           {/* User */}
           <Link
             href="/login"
-            className="flex size-8 items-center justify-center rounded-md border border-[#222222] bg-[#111111] text-[#888888] transition-colors hover:border-[#00E5A0] hover:text-[#00E5A0]"
+            className="flex size-8 items-center justify-center rounded-md border border-[#222222] bg-[#111111] text-[#888888] transition-colors hover:border-primary hover:text-primary"
             aria-label="Mi cuenta"
           >
             <User className="size-4" />
@@ -108,12 +108,12 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
           <button
             type="button"
             onClick={openCart}
-            className="relative flex size-8 items-center justify-center rounded-md border border-[#222222] bg-[#111111] text-[#888888] transition-colors hover:border-[#00E5A0] hover:text-[#00E5A0]"
+            className="relative flex size-8 items-center justify-center rounded-md border border-[#222222] bg-[#111111] text-[#888888] transition-colors hover:border-primary hover:text-primary"
             aria-label="Carrito"
           >
             <ShoppingCart className="size-4" />
             {itemCount > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-[#00E5A0] text-[10px] font-bold text-[#0A0A0A]">
+              <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                 {itemCount}
               </span>
             )}
@@ -126,12 +126,12 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
           <button
             type="button"
             onClick={openCart}
-            className="relative flex size-11 items-center justify-center rounded-md text-[#888888] transition-colors hover:text-[#00E5A0]"
+            className="relative flex size-11 items-center justify-center rounded-md text-[#888888] transition-colors hover:text-primary"
             aria-label="Carrito"
           >
             <ShoppingCart className="size-5" />
             {itemCount > 0 && (
-              <span className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-[#00E5A0] text-[9px] font-bold text-[#0A0A0A]">
+              <span className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
                 {itemCount}
               </span>
             )}

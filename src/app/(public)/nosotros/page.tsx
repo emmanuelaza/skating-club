@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
 import { Heart, Target, Users, Award, type LucideIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -35,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NosotrosPage() {
-  const [page, team] = await Promise.all([getPageBySlug('nosotros'), getAllTeamMembers()]);
+  const page = await getPageBySlug('nosotros');
 
   return (
     <>
@@ -44,8 +45,22 @@ export default async function NosotrosPage() {
         subtitle={page?.excerpt ?? 'La historia, el equipo y los valores detrás del club.'}
       />
 
+      {/* Imagen Principal del Equipo (Foto 7) */}
+      <div className="mx-auto max-w-6xl px-6 pb-12">
+        <div className="relative h-[300px] md:h-[500px] w-full overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
+          <Image
+            src="/images/nosotros_alineados.jpg"
+            alt="Equipo completo Grandes Paisas"
+            fill
+            priority
+            className="object-cover object-[center_35%]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+        </div>
+      </div>
+
       {page?.body ? (
-        <Section>
+        <Section className="pt-0">
           <article className="prose prose-invert mx-auto max-w-3xl text-foreground">
             <PortableText value={page.body as PortableValue} />
           </article>
@@ -73,25 +88,49 @@ export default async function NosotrosPage() {
         </div>
       </Section>
 
-      {team.length > 0 ? (
-        <Section alt={!page?.body}>
-          <FadeIn>
-            <SectionHeading title="Equipo" subtitle="Quienes hacen posible cada clase." />
-          </FadeIn>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {team.map((member, index) => (
-              <FadeIn key={member._id} delay={index * 0.08}>
-                <TeamCard
-                  name={member.name}
-                  photo={img(member.photo)}
-                  bio={member.bio}
-                  specialty={member.specialty}
-                />
-              </FadeIn>
-            ))}
+      {/* Sección Galería / Comunidad */}
+      <Section alt={!page?.body}>
+        <FadeIn>
+          <SectionHeading 
+            title="Comunidad en competencia" 
+            subtitle="Representamos con orgullo nuestros colores en cada torneo." 
+          />
+        </FadeIn>
+        
+        <div className="grid gap-8 md:grid-cols-2">
+          {/* Selfie grupal */}
+          <div className="flex flex-col gap-3">
+            <div className="relative h-[300px] md:h-[400px] w-full overflow-hidden rounded-2xl border border-border bg-card shadow-lg group">
+              <Image
+                src="/images/nosotros_selfie.jpg"
+                alt="Selfie grupal del equipo"
+                fill
+                className="object-cover object-center transition-transform duration-500 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            </div>
+            <p className="text-center text-sm font-medium text-muted-foreground italic">
+              Nuestro equipo en competencia internacional
+            </p>
           </div>
-        </Section>
-      ) : null}
+
+          {/* Grupo arrodillados y de pie */}
+          <div className="flex flex-col gap-3">
+            <div className="relative h-[300px] md:h-[400px] w-full overflow-hidden rounded-2xl border border-border bg-card shadow-lg group">
+              <Image
+                src="/images/nosotros_grupal.jpg"
+                alt="Grupo del equipo completo"
+                fill
+                className="object-cover object-center transition-transform duration-500 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            </div>
+            <p className="text-center text-sm font-medium text-muted-foreground italic">
+              Campeonato Panamericano de Patinaje de Velocidad
+            </p>
+          </div>
+        </div>
+      </Section>
     </>
   );
 }

@@ -64,11 +64,11 @@ const OFFERING_STATS = [
 
 const CLASS_TYPES = [
   {
-    name: 'Patinaje libre',
-    level: 'Todos los niveles',
+    name: 'Iniciación Infantil',
+    level: 'Principiante',
     duration: 60,
-    desc: 'Práctica libre en pista con supervisión profesional.',
-    image: 'https://images.unsplash.com/photo-1547919307-1ecb10702e6f?w=800&q=80',
+    desc: 'Tus primeros deslizamientos en pista de manera segura y divertida. Ideal para niños que comienzan.',
+    image: '/images/clase_infantil_2.jpg',
   },
   {
     name: 'Velocidad',
@@ -78,11 +78,11 @@ const CLASS_TYPES = [
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
   },
   {
-    name: 'Artístico',
+    name: 'Patinaje Infantil',
     level: 'Principiante',
-    duration: 75,
-    desc: 'Figuras, coreografías y expresión corporal sobre ruedas.',
-    image: 'https://images.unsplash.com/photo-1535525153412-5a42439a210d?w=800&q=80',
+    duration: 60,
+    desc: 'Juegos y técnicas en movimiento para desarrollar velocidad y destreza en pista.',
+    image: '/images/clase_infantil_3.jpg',
   },
   {
     name: 'Slalom',
@@ -154,12 +154,7 @@ const PLANS: PublicPlan[] = [
   },
 ];
 
-const TEAM = [
-  { name: 'Laura Gómez', specialty: 'Patinaje artístico', cert: 'Certificación FIRS' },
-  { name: 'Andrés Ruiz', specialty: 'Velocidad', cert: 'Entrenador nivel II' },
-  { name: 'Mariana Díaz', specialty: 'Freestyle slalom', cert: 'Campeona nacional' },
-  { name: 'Carlos Peña', specialty: 'Hockey en línea', cert: 'Certificación FIRS' },
-];
+
 
 
 const FAQS = [
@@ -283,7 +278,7 @@ export default function PublicHomePage() {
                 top: line.top,
                 width: '55%',
                 height: i < 2 ? '1.5px' : '1px',
-                background: `linear-gradient(to left, transparent 0%, rgba(0,229,160,${line.opacity}) 100%)`,
+            background: `linear-gradient(to left, transparent 0%, rgba(34,211,238,${line.opacity}) 100%)`,
               }}
             />
           ))}
@@ -331,12 +326,12 @@ export default function PublicHomePage() {
 
           {/* Botones - Fila horizontal a partir de 375px de ancho de pantalla */}
           <div className="flex w-full flex-col gap-2.5 min-[375px]:flex-row min-[375px]:w-auto md:justify-center md:gap-4">
-            {/* Primario: verde menta, texto negro en mobile */}
+            {/* Primario: degradado de violeta a cyan */}
             <MagneticButton className="w-full min-[375px]:w-auto">
               <Button
                 asChild
                 size="lg"
-                className="w-full min-[375px]:w-auto py-2.5 sm:py-3 text-xs sm:text-sm md:py-4 md:text-base font-semibold"
+                className="w-full min-[375px]:w-auto py-2.5 sm:py-3 text-xs sm:text-sm md:py-4 md:text-base font-semibold bg-gradient-to-r from-violet-500 to-cyan-500 hover:from-violet-600 hover:to-cyan-600 text-white border-0 transition-all duration-300 shadow-[0_0_20px_rgba(167,139,250,0.3)]"
               >
                 <Link href="/register">Únete al club</Link>
               </Button>
@@ -462,6 +457,88 @@ export default function PublicHomePage() {
         <InteractiveClasses classTypes={CLASS_TYPES} />
       </section>
 
+      {/* ═══════════════════════════════════════════ LOGROS Y RESULTADOS */}
+      <Section>
+        <FadeIn>
+          <SectionHeading
+            title="Logros que nos enorgullecen"
+            subtitle="Nuestros patinadores destacan en las pistas nacionales e internacionales."
+            highlight={['enorgullecen']}
+          />
+        </FadeIn>
+
+        <div className="grid grid-cols-1 md:grid-cols-10 gap-6">
+          {/* Foto protagonista (Podio) - 60% en desktop */}
+          <div className="md:col-span-6 group relative h-[300px] md:h-[450px] overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 shadow-lg">
+            <Image
+              src="/images/logros_podio.jpg"
+              alt="Podio de competencia"
+              fill
+              className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent transition-opacity duration-300 group-hover:from-black/95" />
+            <div className="absolute bottom-0 left-0 p-6">
+              <span className="text-xs uppercase tracking-widest text-primary font-bold">Campeonato Panamericano</span>
+              <h4 className="font-display text-lg font-bold text-white mt-1">Medalla de Oro al Centro en el Podio</h4>
+            </div>
+          </div>
+
+          {/* Columna vertical - 40% en desktop */}
+          <div className="md:col-span-4 flex flex-col gap-6 h-auto md:h-[450px]">
+            {/* Joven con medallas */}
+            <div className="flex-1 min-h-[180px] group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 shadow-lg">
+              <Image
+                src="/images/logros_joven_medallas.jpg"
+                alt="Joven destacado con medallas"
+                fill
+                className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent transition-opacity duration-300 group-hover:from-black/95" />
+              <div className="absolute bottom-0 left-0 p-6">
+                <span className="text-xs uppercase tracking-widest text-primary font-bold">Categoría Juvenil</span>
+                <h4 className="font-display text-base font-bold text-white mt-1">Destacado con Múltiples Medallas</h4>
+              </div>
+            </div>
+
+            {/* Grupo celebrando */}
+            <div className="flex-1 min-h-[180px] group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 shadow-lg">
+              <Image
+                src="/images/logros_celebracion.jpg"
+                alt="Equipo celebrando medallas"
+                fill
+                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent transition-opacity duration-300 group-hover:from-black/95" />
+              <div className="absolute bottom-0 left-0 p-6">
+                <span className="text-xs uppercase tracking-widest text-primary font-bold">Celebración de Triunfo</span>
+                <h4 className="font-display text-base font-bold text-white mt-1">Logros en Equipo y Compañerismo</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fila de cifras destacadas */}
+        <div className="mt-14 grid grid-cols-1 gap-8 pt-10 border-t border-border sm:grid-cols-3 sm:gap-6 md:gap-12">
+          {[
+            { value: '145+', label: 'Medallas obtenidas en campeonatos oficiales' },
+            { value: '38', label: 'Deportistas en torneos internacionales' },
+            { value: '12', label: 'Años consecutivos compitiendo al más alto nivel' },
+          ].map((stat, i) => (
+            <FadeIn
+              key={stat.value}
+              delay={i * 0.1}
+              className={cn(
+                'text-center px-4 py-2 flex flex-col items-center justify-center',
+                i > 0 && 'sm:border-l sm:border-border'
+              )}
+            >
+              <p className="font-display text-4xl font-black text-primary sm:text-[3rem]">{stat.value}</p>
+              <p className="mt-2 text-xs leading-snug text-muted-foreground sm:text-[13px] max-w-[200px] sm:max-w-none px-2">{stat.label}</p>
+            </FadeIn>
+          ))}
+        </div>
+      </Section>
+
       {/* ═══════════════════════════════════════════ PLANES */}
       <Section>
         <FadeIn>
@@ -494,42 +571,7 @@ export default function PublicHomePage() {
         </div>
       </Section>
 
-      {/* ═══════════════════════════════════════════ EQUIPO */}
-      <Section>
-        <FadeIn>
-          <SectionHeading
-            title="Nuestro equipo"
-            subtitle="Instructores certificados que te acompañan en cada paso."
-            highlight={['equipo']}
-          />
-        </FadeIn>
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-          {TEAM.map((member, index) => (
-            <FadeIn key={member.name} delay={index * 0.08}>
-              <SpotlightCard className="h-full">
-                <div className={cn('group relative h-full overflow-hidden rounded-lg border border-border bg-card p-6 text-center', CARD_HOVER)}>
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-primary/0 transition-colors duration-200 group-hover:bg-primary/[0.06]"
-                  />
-                  <div className="relative">
-                    <span className="mx-auto flex size-20 items-center justify-center rounded-full bg-[#1A1A1A] font-display text-2xl font-semibold text-primary ring-2 ring-border transition-all duration-200 group-hover:ring-primary">
-                      {member.name.charAt(0)}
-                    </span>
-                    <h3 className="mt-4 font-display text-base font-semibold text-foreground">
-                      {member.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{member.specialty}</p>
-                    <Badge variant="secondary" className="mt-3">
-                      {member.cert}
-                    </Badge>
-                  </div>
-                </div>
-              </SpotlightCard>
-            </FadeIn>
-          ))}
-        </div>
-      </Section>
+
 
       {/* ═══════════════════════════════════════════ TESTIMONIOS */}
       <TestimonialsStack />

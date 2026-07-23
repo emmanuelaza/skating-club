@@ -39,16 +39,16 @@ export function PricingCard({
     <SpotlightCard className="h-full">
       <div
         className={cn(
-          'relative flex h-full flex-col rounded-lg border bg-[#111111] p-6 sm:p-8 transition-colors duration-200',
+          'relative flex h-full flex-col rounded-lg p-6 sm:p-8 transition-colors duration-200',
           recommended
-            ? 'border-primary/50 shadow-[0_8px_32px_rgba(0,229,160,0.12)]'
-            : 'border-[#222222] hover:border-primary/30',
+            ? 'border border-transparent bg-[linear-gradient(to_bottom,#111,#111),_linear-gradient(to_bottom,#a78bfa,#22d3ee)] bg-origin-border bg-clip-content,border-box shadow-[0_8px_32px_rgba(167,139,250,0.15)]'
+            : 'border border-[#222222] bg-[#111111] hover:border-primary/30',
         )}
       >
         {/* Badge "Más popular" */}
         {recommended && (
           <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span className="whitespace-nowrap rounded-full bg-primary px-3 py-1 text-xs font-bold text-black">
+            <span className="whitespace-nowrap rounded-full bg-gradient-to-r from-violet-500 to-cyan-500 px-3 py-1 text-xs font-bold text-white shadow-md">
               Más popular
             </span>
           </div>
@@ -102,7 +102,7 @@ export function PricingCard({
           className={cn(
             'block w-full rounded-md py-3 text-center text-sm font-semibold transition-colors duration-200',
             recommended
-              ? 'bg-primary text-black hover:bg-[#00C988]'
+              ? 'bg-gradient-to-r from-violet-500 to-cyan-500 text-white hover:from-violet-600 hover:to-cyan-600'
               : 'border border-[#333333] text-foreground hover:border-primary hover:text-primary',
           )}
         >
