@@ -47,7 +47,7 @@ export default function BackgroundShader() {
       const dummy = new THREE.Object3D();
       const points: { x: number; z: number }[] = [];
       const colorOff = new THREE.Color(0x111111);
-      const colorOn = new THREE.Color(0x00E5A0);
+      const colorOn = new THREE.Color(0x22d3ee);
       const tmpColor = new THREE.Color();
 
       let i = 0;

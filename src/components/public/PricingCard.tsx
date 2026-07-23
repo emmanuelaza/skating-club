@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Route } from 'next';
-import { Check } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SpotlightCard } from './SpotlightCard';
 
@@ -45,17 +45,16 @@ export function PricingCard({
             : 'border border-[#222222] bg-[#111111] hover:border-primary/30',
         )}
       >
-        {/* Badge "Más popular" */}
-        {recommended && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span className="whitespace-nowrap rounded-full bg-gradient-to-r from-violet-500 to-cyan-500 px-3 py-1 text-xs font-bold text-white shadow-md">
+        {/* Header con nombre del plan y badge integrado */}
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-display text-xl font-bold text-foreground">{name}</h3>
+          {recommended && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-500/15 to-cyan-500/15 border border-cyan-400/30 px-3 py-1 text-xs font-semibold text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.15)] backdrop-blur-sm">
+              <Sparkles className="size-3 text-cyan-400" />
               Más popular
             </span>
-          </div>
-        )}
-
-        {/* Nombre del plan */}
-        <h3 className="font-display text-xl font-bold text-foreground">{name}</h3>
+          )}
+        </div>
 
         {/* Descripción corta */}
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>

@@ -67,7 +67,7 @@ export default function ParticleField({ className }: { className?: string }) {
       const pointAttribute = new THREE.BufferAttribute(pointPositions, 3);
       pointGeometry.setAttribute('position', pointAttribute);
       const pointMaterial = new THREE.PointsMaterial({
-        color: 0x00E5A0,
+        color: 0x22d3ee,
         size: 0.05,
         sizeAttenuation: true,
         transparent: true,
@@ -112,7 +112,7 @@ export default function ParticleField({ className }: { className?: string }) {
       };
       window.addEventListener('resize', onResize);
 
-      const baseColor = new THREE.Color(0x00E5A0);
+      const baseColor = new THREE.Color(0x22d3ee);
       const repel = new THREE.Vector3();
 
       let animId = 0;
