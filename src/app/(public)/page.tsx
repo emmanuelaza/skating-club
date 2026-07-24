@@ -212,7 +212,7 @@ export default function PublicHomePage() {
         <ParticleFieldLazy className="pointer-events-none absolute inset-0 z-0" />
 
         {/* ─── MOBILE only: imagen fotográfica inmersiva ─── */}
-        {/* Capa 1 — Imagen */}
+        {/* Capa 1 — Imagen enfocada en la patinadora (esquina inferior derecha) */}
         <div className="absolute inset-0 z-[1] w-full h-full md:hidden" aria-hidden="true">
           <Image
             src="/hero-mobile.jpg"
@@ -221,68 +221,65 @@ export default function PublicHomePage() {
             priority
             loading="eager"
             sizes="(max-width: 768px) 100vw"
-            className="object-cover object-[right_bottom]"
+            className="object-cover object-[88%_bottom]"
           />
         </div>
 
-        {/* Capa 2 — Overlay vertical: oscurece la parte superior para el texto sobre espacio negativo */}
+        {/* Capa 2 — Overlay sutil superior e izquierdo para contraste del texto sin oscurecer a la chica */}
         <div
           className="pointer-events-none absolute inset-0 z-[2] md:hidden"
           aria-hidden="true"
           style={{
             background:
-              'linear-gradient(to bottom, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.50) 40%, transparent 65%)',
+              'linear-gradient(to bottom, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.30) 40%, transparent 65%)',
           }}
         />
 
-        {/* Capa 3 — Overlay lateral izquierdo para garantizar contraste absoluto */}
         <div
           className="pointer-events-none absolute inset-0 z-[3] md:hidden"
           aria-hidden="true"
           style={{
             background:
-              'linear-gradient(to right, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0.30) 45%, transparent 70%)',
+              'linear-gradient(to right, rgba(10,10,10,0.70) 0%, rgba(10,10,10,0.15) 50%, transparent 75%)',
           }}
         />
 
-        {/* Capa 5 — Máscara de transición inferior (35% desde abajo) */}
+        {/* Capa 5 — Máscara de transición inferior sutil hacia el fondo negro */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[35%] md:hidden"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[30%] md:hidden"
           aria-hidden="true"
           style={{
             background:
-              'linear-gradient(to bottom, transparent 0%, rgba(10,10,10,0.7) 40%, #0A0A0A 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(10,10,10,0.6) 50%, #0A0A0A 100%)',
           }}
         />
 
-        {/* Capa 6 — Líneas de velocidad extendidas (CSS puro) */}
+        {/* Capa 6 — Líneas de velocidad sutiles */}
         <div className="pointer-events-none absolute inset-0 z-[5] md:hidden" aria-hidden="true">
-          {/* 4 líneas delgadas alineadas visualmente con la estela de la patinadora */}
           {[
-            { top: '58%', opacity: 0.55 },
-            { top: '61%', opacity: 0.35 },
-            { top: '63.5%', opacity: 0.25 },
-            { top: '66%', opacity: 0.15 },
+            { top: '60%', opacity: 0.45 },
+            { top: '63%', opacity: 0.30 },
+            { top: '65.5%', opacity: 0.20 },
           ].map((line, i) => (
             <div
               key={i}
               className="absolute left-0"
               style={{
                 top: line.top,
-                width: '55%',
-                height: i < 2 ? '1.5px' : '1px',
+                width: '50%',
+                height: '1px',
                 background: `linear-gradient(to left, transparent 0%, rgba(34,211,238,${line.opacity}) 100%)`,
               }}
             />
           ))}
         </div>
 
-        {/* ─── Capa 4: Contenido del hero ─── */}
+        {/* ─── Capa 4: Contenido del hero en espacio negativo ─── */}
         <div
           className={cn(
             'relative z-[10] w-full',
-            // MOBILE: alineado arriba en el espacio negativo superior izquierdo (padding top ajustado)
-            'flex flex-col items-start px-6 pt-[88px]',
+            // MOBILE: alineado arriba en espacio negativo (padding top compacto 76px)
+            'flex flex-col items-start px-5 pt-[76px]',
             // DESKTOP: centrado como antes
             'md:mx-auto md:flex md:max-w-4xl md:flex-col md:items-center md:px-6 md:pb-16 md:pt-32 md:text-center',
             'lg:py-0',
@@ -290,18 +287,18 @@ export default function PublicHomePage() {
         >
           {/* Eyebrow */}
           <span
-            className="mb-3 block uppercase text-white/60 md:mb-4 md:text-muted-foreground"
-            style={{ fontSize: '10px', letterSpacing: '0.25em' }}
+            className="mb-2 block uppercase text-white/70 md:mb-4 md:text-muted-foreground font-semibold"
+            style={{ fontSize: '9.5px', letterSpacing: '0.22em' }}
           >
-            Club de patinaje profesional · Bogotá, Colombia
+            Club de patinaje profesional · Bogotá
           </span>
 
           {/* Título */}
           <h1
-            className="mb-3 font-display font-black leading-[1.1] tracking-tight text-white md:mb-4 md:text-foreground"
-            style={{ fontSize: 'clamp(1.8rem, 5vw, 5.5rem)' }}
+            className="mb-2 font-display font-black leading-[1.12] tracking-tight text-white md:mb-4 md:text-foreground"
+            style={{ fontSize: 'clamp(1.75rem, 5.5vw, 5.5rem)', maxWidth: '240px' }}
           >
-            {/* Mobile: texto plano blanco puro sobre la foto */}
+            {/* Mobile: texto plano sobre el área limpia superior izquierda */}
             <span className="md:hidden">El arte de rodar con precisión</span>
             {/* Desktop: GlowText animado */}
             <span className="hidden md:block">
@@ -311,30 +308,30 @@ export default function PublicHomePage() {
 
           {/* Subtítulo */}
           <p
-            className="mb-6 leading-relaxed text-white/70 md:mb-8 md:text-muted-foreground"
-            style={{ fontSize: '14px', maxWidth: '280px' }}
+            className="mb-5 leading-relaxed text-white/80 md:mb-8 md:text-muted-foreground text-xs sm:text-sm"
+            style={{ maxWidth: '230px' }}
           >
             Clases, membresías y comunidad para patinadores de todos los niveles.
           </p>
 
-          {/* Botones - Fila horizontal a partir de 375px de ancho de pantalla */}
-          <div className="flex w-full flex-col gap-2.5 min-[375px]:flex-row min-[375px]:w-auto md:justify-center md:gap-4">
+          {/* Botones */}
+          <div className="flex w-full flex-col gap-2 min-[360px]:flex-row min-[360px]:w-auto md:justify-center md:gap-4 max-w-[240px] min-[360px]:max-w-none">
             {/* Primario: degradado de violeta a cyan */}
-            <MagneticButton className="w-full min-[375px]:w-auto">
+            <MagneticButton className="w-full min-[360px]:w-auto">
               <Button
                 asChild
                 size="lg"
-                className="w-full min-[375px]:w-auto py-2.5 sm:py-3 text-xs sm:text-sm md:py-4 md:text-base font-semibold bg-gradient-to-r from-violet-500 to-cyan-500 hover:from-violet-600 hover:to-cyan-600 text-white border-0 transition-all duration-300 shadow-[0_0_20px_rgba(167,139,250,0.3)]"
+                className="w-full min-[360px]:w-auto py-2 sm:py-3 text-xs md:py-4 md:text-base font-semibold bg-gradient-to-r from-violet-500 to-cyan-500 hover:from-violet-600 hover:to-cyan-600 text-white border-0 transition-all duration-300 shadow-[0_0_20px_rgba(167,139,250,0.3)]"
               >
                 <Link href="/register">Únete al club</Link>
               </Button>
             </MagneticButton>
-            {/* Secundario: borde blanco semitransparente en mobile, borde normal en desktop */}
+            {/* Secundario */}
             <Button
               asChild
               size="lg"
               variant="outline"
-              className="w-full min-[375px]:w-auto border-white/30 py-2.5 sm:py-3 text-xs sm:text-sm text-white hover:border-primary hover:text-primary md:border-border md:py-4 md:text-base md:text-foreground font-semibold"
+              className="w-full min-[360px]:w-auto border-white/30 py-2 sm:py-3 text-xs text-white hover:border-primary hover:text-primary md:border-border md:py-4 md:text-base md:text-foreground font-semibold"
             >
               <Link href={'/clases' as Route}>Ver clases</Link>
             </Button>
