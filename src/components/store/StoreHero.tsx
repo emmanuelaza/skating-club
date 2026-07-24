@@ -22,59 +22,52 @@ export function StoreHero() {
 
   React.useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
-
-    // Asegurar reproducción automática silenciosa y limpia
-    video.muted = true;
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Ignorar restricciones de autostart si el navegador requiere interacción extra
-      });
-    }
-
-    return () => {
-      if (video) {
-        video.pause();
+    if (video) {
+      video.defaultMuted = true;
+      video.muted = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay fallbacks
+        });
       }
-    };
+    }
   }, []);
 
   return (
     <section className="relative overflow-hidden bg-[#0A0A0A] py-10 sm:py-14 lg:py-16 flex items-center min-h-[420px] lg:min-h-[480px]">
-      {/* ── AMBIENT BACKGROUND GLOW & NOISE ── */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Glow violáceo ambiental sutil detrás del hero */}
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 size-[500px] rounded-full bg-[#8B5CF6]/12 blur-[140px] mix-blend-screen"
-          style={{
-            animation: 'glowPulse 6s ease-in-out infinite alternate',
-          }}
-        />
-        {/* Glow cyan secundario sutil en el lado izquierdo */}
-        <div
-          className="absolute left-0 bottom-0 size-[350px] rounded-full bg-[#22D3EE]/05 blur-[120px] mix-blend-screen"
-        />
-
-        {/* Textura de ruido sutil */}
-        <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            backgroundSize: '180px',
-          }}
+      {/* ── BACKGROUND VIDEO & OVERLAYS ── */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        {/* Background ambient video (faded sutil en el fondo) */}
+        <video
+          src="/hero-store.webm"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute right-0 top-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto object-cover opacity-20 blur-sm scale-105"
         />
 
-        {/* Transiciones suaves superior e inferior */}
+        {/* Halo violáceo ambiental sutil */}
         <div
-          className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0A0A0A] to-transparent z-10"
+          className="absolute right-0 top-1/2 -translate-y-1/2 size-[500px] rounded-full bg-[#8B5CF6]/15 blur-[140px] mix-blend-screen"
         />
-        <div
-          className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0A0A0A] to-transparent z-10"
+
+        {/* Overlay de degradado horizontal (Oscurece la izquierda para legibilidad perfecta del texto) */}
+        <div 
+          className="absolute inset-0 z-10"
+          style={{
+            background: 'linear-gradient(to right, #0A0A0A 0%, #0A0A0A 40%, rgba(10,10,10,0.85) 60%, rgba(10,10,10,0.4) 100%)'
+          }}
         />
+
+        {/* Gradientes superior e inferior para integrarse con la página */}
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0A0A0A] to-transparent z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0A0A0A] to-transparent z-10" />
       </div>
 
-      {/* ── CONTENT & VIDEO GRID ── */}
+      {/* ── CONTENT & PROTAGONIST VIDEO ── */}
       <div className={`${PUBLIC_CONTAINER} relative z-20 w-full`}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
@@ -145,38 +138,22 @@ export function StoreHero() {
 
           </div>
 
-          {/* COLUMNA DERECHA: Video como protagonista visual */}
+          {/* COLUMNA DERECHA: Video como protagonista visual nítido y brillante */}
           <div className="lg:col-span-7 relative w-full flex items-center justify-center mt-4 lg:mt-0">
             <motion.div
               {...fadeUp(0.2)}
-              className="relative w-full max-w-2xl overflow-hidden rounded-2xl"
-              style={{
-                // Máscara radial / lineal suave para fundir completamente con el fondo negro sin bordes ni cajas marcadas
-                maskImage: 'radial-gradient(ellipse 95% 95% at 50% 50%, black 70%, transparent 100%)',
-                WebkitMaskImage: 'radial-gradient(ellipse 95% 95% at 50% 50%, black 70%, transparent 100%)',
-              }}
+              className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-[#222222]/60 shadow-[0_10px_40px_rgba(0,0,0,0.8)] bg-[#0A0A0A]"
             >
-              {/* Overlay suave de integración en los bordes del video */}
-              <div
-                className="pointer-events-none absolute inset-0 z-10"
-                aria-hidden="true"
-                style={{
-                  background:
-                    'radial-gradient(ellipse 85% 85% at 50% 50%, transparent 60%, #0A0A0A 100%)',
-                }}
-              />
-
               <video
                 ref={videoRef}
+                src="/hero-store.webm"
                 autoPlay
                 muted
                 loop
                 playsInline
                 preload="auto"
+                onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
                 className="w-full h-auto max-h-[380px] sm:max-h-[420px] lg:max-h-[460px] object-cover rounded-2xl select-none"
-                style={{
-                  filter: 'contrast(1.05) brightness(0.95)',
-                }}
               >
                 <source src="/hero-store.webm" type="video/webm" />
               </video>
