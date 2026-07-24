@@ -172,15 +172,13 @@ export function StoreHero() {
                 muted
                 loop
                 playsInline
-                preload="metadata"
-                poster="/hero-store.jpg"
+                preload="auto"
                 className="w-full h-auto max-h-[380px] sm:max-h-[420px] lg:max-h-[460px] object-cover rounded-2xl select-none"
                 style={{
                   filter: 'contrast(1.05) brightness(0.95)',
                 }}
               >
                 <source src="/hero-store.webm" type="video/webm" />
-                <source src="/hero-store.mp4" type="video/mp4" />
               </video>
             </motion.div>
           </div>

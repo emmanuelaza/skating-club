@@ -155,7 +155,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                 priority
                 sizes="(max-width: 1024px) 100vw, 55vw"
                 className="object-contain p-8 transition-transform duration-300"
-                unoptimized={Boolean(productImages[activeImageIndex]?.startsWith('http') || productImages[activeImageIndex]?.startsWith('/hero-store.jpg'))}
+                unoptimized={Boolean(productImages[activeImageIndex]?.startsWith('http'))}
               />
 
               {/* Zoom Overlay (Desktop only) */}
@@ -205,7 +205,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                       alt={`Miniatura ${i + 1}`}
                       fill
                       className="object-contain p-2"
-                      unoptimized={img.startsWith('http') || img.startsWith('/hero-store.jpg')}
+                      unoptimized={img.startsWith('http')}
                     />
                   </button>
                 ))}

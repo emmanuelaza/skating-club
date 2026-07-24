@@ -71,7 +71,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-          unoptimized={product.image.startsWith('http') || product.image.startsWith('/hero-store.jpg')}
+          unoptimized={product.image.startsWith('http')}
         />
 
         {/* New badge */}

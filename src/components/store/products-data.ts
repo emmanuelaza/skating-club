@@ -30,9 +30,9 @@ export const PRODUCTS: Product[] = [
     rating: 4.9,
     reviews: 128,
     isNew: true,
-    image: '/hero-store.jpg',
+    image: '/images/clase_freestyle.jpg',
     images: [
-      '/hero-store.jpg',
+      '/images/clase_freestyle.jpg',
       'https://images.unsplash.com/photo-1543508282-6319a3e2621d?w=600&q=80',
       'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80'
     ],
