@@ -67,7 +67,7 @@ export default function ParticleField({ className }: { className?: string }) {
       const pointAttribute = new THREE.BufferAttribute(pointPositions, 3);
       pointGeometry.setAttribute('position', pointAttribute);
       const pointMaterial = new THREE.PointsMaterial({
-        color: 0x22d3ee,
+        color: 0x8b5cf6,
         size: 0.05,
         sizeAttenuation: true,
         transparent: true,

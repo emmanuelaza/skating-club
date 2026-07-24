@@ -16,7 +16,7 @@ export default function Loading() {
           
           {/* Animated accent ring */}
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#00E5A0]"
+            className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#8B5CF6]"
             animate={{ rotate: 360 }}
             transition={{
               repeat: Infinity,

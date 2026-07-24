@@ -41,7 +41,7 @@ export function PricingCard({
         className={cn(
           'relative flex h-full flex-col rounded-lg p-6 sm:p-8 transition-colors duration-200',
           recommended
-            ? 'border border-transparent bg-[linear-gradient(to_bottom,#111,#111),_linear-gradient(to_bottom,#a78bfa,#22d3ee)] bg-origin-border bg-clip-content,border-box shadow-[0_8px_32px_rgba(167,139,250,0.15)]'
+            ? 'border border-transparent bg-[linear-gradient(to_bottom,#111,#111),_linear-gradient(to_bottom,#8b5cf6,#22d3ee)] bg-origin-border bg-clip-content,border-box shadow-[0_8px_32px_rgba(139,92,246,0.18)]'
             : 'border border-[#222222] bg-[#111111] hover:border-primary/30',
         )}
       >

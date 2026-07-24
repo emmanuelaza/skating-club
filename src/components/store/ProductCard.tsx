@@ -76,7 +76,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
 
         {/* New badge */}
         {product.isNew && (
-          <span className="absolute left-3 top-3 rounded-md bg-[#00E5A0] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0A0A0A]">
+          <span className="absolute left-3 top-3 rounded-md bg-[#8B5CF6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
             Nuevo
           </span>
         )}
@@ -88,8 +88,8 @@ export function ProductCard({ product, index }: ProductCardProps) {
           aria-label={liked ? 'Quitar de favoritos' : 'Agregar a favoritos'}
           className={`absolute right-3 top-3 flex size-8 items-center justify-center rounded-full border transition-all duration-200 ${
             liked
-              ? 'border-[#00E5A0] bg-[#00E5A0]/20 text-[#00E5A0]'
-              : 'border-[#222222] bg-black/40 text-[#888888] hover:border-[#00E5A0] hover:text-[#00E5A0]'
+              ? 'border-[#8B5CF6] bg-[#8B5CF6]/20 text-[#8B5CF6]'
+              : 'border-[#222222] bg-black/40 text-[#888888] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
           }`}
         >
           <Heart className={`size-3.5 ${liked ? 'fill-current' : ''}`} />
@@ -101,12 +101,12 @@ export function ProductCard({ product, index }: ProductCardProps) {
         <p className="text-[10px] font-medium uppercase tracking-wider text-[#888888]">
           {product.category}
         </p>
-        <h3 className="font-display text-sm font-semibold leading-tight text-[#F5F5F5] group-hover:text-[#00E5A0] transition-colors line-clamp-1">
+        <h3 className="font-display text-sm font-semibold leading-tight text-[#F5F5F5] group-hover:text-[#8B5CF6] transition-colors line-clamp-1">
           {product.name}
         </h3>
 
         {/* Price */}
-        <p className="mt-0.5 font-display text-lg font-bold text-[#00E5A0]">
+        <p className="mt-0.5 font-display text-lg font-bold text-[#22D3EE]">
           ${product.price.toLocaleString('es-CO')}
         </p>
 
@@ -118,7 +118,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
                 key={i}
                 className={`size-3 ${
                   i < Math.floor(product.rating)
-                    ? 'fill-[#00E5A0] text-[#00E5A0]'
+                    ? 'fill-[#22D3EE] text-[#22D3EE]'
                     : 'fill-[#222222] text-[#222222]'
                 }`}
               />
@@ -133,7 +133,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
           <button
             type="button"
             onClick={handleBuyNow}
-            className="flex-1 rounded-lg border border-[#00E5A0] bg-[#00E5A0] py-2 text-xs font-bold text-[#0A0A0A] transition-all duration-300 hover:bg-[#00C988] hover:border-[#00C988] active:scale-95"
+            className="flex-1 rounded-lg border-0 bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] py-2 text-xs font-bold text-white transition-all duration-300 hover:from-[#7c4df2] hover:to-[#5457e5] active:scale-95"
           >
             Comprar ahora
           </button>
@@ -145,8 +145,8 @@ export function ProductCard({ product, index }: ProductCardProps) {
             aria-label="Agregar al carrito"
             className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-all duration-300 ${
               addedFeedback
-                ? 'border-[#00E5A0] bg-[#00E5A0]/10 text-[#00E5A0]'
-                : 'border-[#222222] bg-[#1A1A1A] text-[#888888] hover:border-[#00E5A0] hover:text-[#00E5A0] active:scale-95'
+                ? 'border-[#22D3EE] bg-[#22D3EE]/10 text-[#22D3EE]'
+                : 'border-[#222222] bg-[#1A1A1A] text-[#888888] hover:border-[#8B5CF6] hover:text-[#8B5CF6] active:scale-95'
             }`}
           >
             {addedFeedback ? <Check className="size-4" /> : <ShoppingCart className="size-4" />}

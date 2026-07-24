@@ -61,8 +61,8 @@ export default function InlineSkate({ className }: { className?: string }) {
       );
       const accentMaterial = trackMat(
         new THREE.MeshStandardMaterial({
-          color: 0x00E5A0,
-          emissive: 0x00E5A0,
+          color: 0x8b5cf6,
+          emissive: 0x8b5cf6,
           emissiveIntensity: 0.4,
           metalness: 0.5,
           roughness: 0.3,
@@ -73,8 +73,8 @@ export default function InlineSkate({ className }: { className?: string }) {
       );
       const stripeMaterial = trackMat(
         new THREE.MeshStandardMaterial({
-          color: 0x00E5A0,
-          emissive: 0x00E5A0,
+          color: 0x8b5cf6,
+          emissive: 0x8b5cf6,
           emissiveIntensity: 0.3,
         }),
       );
@@ -121,10 +121,10 @@ export default function InlineSkate({ className }: { className?: string }) {
       const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
       keyLight.position.set(-2, 3, 2);
       scene.add(keyLight);
-      const accentLight = new THREE.PointLight(0x00E5A0, 2, 5);
+      const accentLight = new THREE.PointLight(0x22d3ee, 2, 5);
       accentLight.position.set(1, -1, 1);
       scene.add(accentLight);
-      const rimLight = new THREE.DirectionalLight(0x00E5A0, 0.5);
+      const rimLight = new THREE.DirectionalLight(0x22d3ee, 0.5);
       rimLight.position.set(2, 1, -2);
       scene.add(rimLight);
       const groundLight = new THREE.PointLight(0x4444aa, 1, 3);

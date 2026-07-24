@@ -38,7 +38,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
       <div className={`${PUBLIC_CONTAINER} py-32 text-center`}>
         <h2 className="font-display text-2xl font-bold text-[#F5F5F5]">Producto no encontrado</h2>
         <p className="mt-2 text-sm text-[#888888]">El producto que buscas no existe o fue retirado de la tienda.</p>
-        <Link href="/tienda" className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#00E5A0] px-5 py-2.5 text-sm font-semibold text-[#00E5A0] hover:bg-[#00E5A0] hover:text-[#0A0A0A] transition-all">
+        <Link href="/tienda" className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#8B5CF6] px-5 py-2.5 text-sm font-semibold text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-all">
           <ArrowLeft className="size-4" />
           Volver a la tienda
         </Link>
@@ -128,11 +128,11 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
           <ChevronRight className="size-3" />
           <span className="text-[#888888] capitalize">{product.categorySlug}</span>
           <ChevronRight className="size-3" />
-          <span className="text-[#00E5A0] font-medium truncate">{product.name}</span>
+          <span className="text-[#8B5CF6] font-medium truncate">{product.name}</span>
         </nav>
 
         {/* Back Link */}
-        <Link href="/tienda" className="inline-flex items-center gap-2 text-xs font-semibold text-[#888888] hover:text-[#00E5A0] transition-colors mb-6">
+        <Link href="/tienda" className="inline-flex items-center gap-2 text-xs font-semibold text-[#888888] hover:text-[#8B5CF6] transition-colors mb-6">
           <ArrowLeft className="size-3.5" />
           Volver al catálogo
         </Link>
@@ -169,7 +169,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
 
               {/* Heart and New Badges */}
               {product.isNew && (
-                <span className="absolute left-4 top-4 rounded-md bg-[#00E5A0] px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-[#0A0A0A] z-20">
+                <span className="absolute left-4 top-4 rounded-md bg-[#8B5CF6] px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-white z-20">
                   Nuevo
                 </span>
               )}
@@ -178,8 +178,8 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                 onClick={() => setLiked(!liked)}
                 className={`absolute right-4 top-4 flex size-10 items-center justify-center rounded-full border z-20 transition-all ${
                   liked
-                    ? 'border-[#00E5A0] bg-[#00E5A0]/20 text-[#00E5A0]'
-                    : 'border-[#222222] bg-black/40 text-[#888888] hover:border-[#00E5A0] hover:text-[#00E5A0]'
+                    ? 'border-[#8B5CF6] bg-[#8B5CF6]/20 text-[#8B5CF6]'
+                    : 'border-[#222222] bg-black/40 text-[#888888] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
                 }`}
               >
                 <Heart className={`size-5 ${liked ? 'fill-current' : ''}`} />
@@ -196,7 +196,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                     onClick={() => setActiveImageIndex(i)}
                     className={`relative size-20 shrink-0 overflow-hidden rounded-xl border bg-[#111111] transition-all ${
                       activeImageIndex === i
-                        ? 'border-[#00E5A0] ring-1 ring-[#00E5A0]'
+                        ? 'border-[#8B5CF6] ring-1 ring-[#8B5CF6]'
                         : 'border-[#222222] hover:border-[#444]'
                     }`}
                   >
@@ -226,13 +226,13 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
 
             {/* Price & Stock */}
             <div className="flex items-baseline justify-between border-b border-[#222222] pb-4">
-              <p className="font-display text-3xl font-black text-[#00E5A0]">
+              <p className="font-display text-3xl font-black text-[#22D3EE]">
                 ${product.price.toLocaleString('es-CO')}
               </p>
               <div className="text-right">
                 <span className={`inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2.5 py-0.5 ${
                   product.stock > 5 
-                    ? 'bg-[#00E5A0]/10 text-[#00E5A0]' 
+                    ? 'bg-[#8B5CF6]/10 text-[#8B5CF6]' 
                     : 'bg-yellow-400/10 text-yellow-400'
                 }`}>
                   {product.stock > 5 ? 'Disponible' : `Últimas ${product.stock} unidades`}
@@ -248,7 +248,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                     key={i}
                     className={`size-4 ${
                       i < Math.floor(product.rating)
-                        ? 'fill-[#00E5A0] text-[#00E5A0]'
+                        ? 'fill-[#22D3EE] text-[#22D3EE]'
                         : 'fill-[#222222] text-[#222222]'
                     }`}
                   />
@@ -278,7 +278,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                       onClick={() => setSelectedColor(c)}
                       className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
                         selectedColor === c
-                          ? 'border-[#00E5A0] bg-[#00E5A0]/10 text-[#00E5A0]'
+                          ? 'border-[#8B5CF6] bg-[#8B5CF6]/10 text-[#8B5CF6]'
                           : 'border-[#222222] text-[#888888] hover:border-[#444]'
                       }`}
                     >
@@ -303,7 +303,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                       onClick={() => setSelectedVariant(v)}
                       className={`min-w-[40px] rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
                         selectedVariant === v
-                          ? 'border-[#00E5A0] bg-[#00E5A0]/10 text-[#00E5A0]'
+                          ? 'border-[#8B5CF6] bg-[#8B5CF6]/10 text-[#8B5CF6]'
                           : 'border-[#222222] text-[#888888] hover:border-[#444]'
                       }`}
                     >
@@ -346,7 +346,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="rounded-xl border border-[#00E5A0] bg-[#00E5A0] py-3.5 text-sm font-bold text-[#0A0A0A] transition-all duration-300 hover:bg-[#00C988] hover:border-[#00C988]"
+                  className="rounded-xl border-0 bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] py-3.5 text-sm font-bold text-white transition-all duration-300 hover:from-[#7c4df2] hover:to-[#5457e5]"
                 >
                   Comprar ahora
                 </button>
@@ -355,8 +355,8 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                   onClick={handleAdd}
                   className={`flex items-center justify-center gap-2 rounded-xl border py-3.5 text-sm font-bold transition-all duration-300 ${
                     added
-                      ? 'border-[#00E5A0] bg-[#00E5A0]/10 text-[#00E5A0]'
-                      : 'border-[#222222] bg-[#111111]/80 hover:border-[#00E5A0] hover:text-[#00E5A0]'
+                      ? 'border-[#22D3EE] bg-[#22D3EE]/10 text-[#22D3EE]'
+                      : 'border-[#222222] bg-[#111111]/80 hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
                   }`}
                 >
                   <ShoppingCart className="size-4" />
@@ -369,8 +369,8 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
             <div className="border-t border-[#222222] pt-6 flex flex-col gap-3">
               {trustStrip.map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-2.5">
-                  <div className="flex size-7 items-center justify-center rounded-full bg-[#00E5A0]/10">
-                    <Icon className="size-3.5 text-[#00E5A0]" />
+                  <div className="flex size-7 items-center justify-center rounded-full bg-[#8B5CF6]/10">
+                    <Icon className="size-3.5 text-[#8B5CF6]" />
                   </div>
                   <span className="text-xs text-[#888888] font-medium">{label}</span>
                 </div>
@@ -391,7 +391,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
               <ul className="space-y-3">
                 {product.features.map((feat, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-sm text-[#888888] leading-relaxed">
-                    <span className="block size-1.5 rounded-full bg-[#00E5A0] mt-2 shrink-0" />
+                    <span className="block size-1.5 rounded-full bg-[#8B5CF6] mt-2 shrink-0" />
                     {feat}
                   </li>
                 ))}
@@ -470,7 +470,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                           key={i}
                           className={`size-3.5 ${
                             i < rev.rating
-                              ? 'fill-[#00E5A0] text-[#00E5A0]'
+                              ? 'fill-[#22D3EE] text-[#22D3EE]'
                               : 'fill-[#222222] text-[#222222]'
                           }`}
                         />
@@ -490,14 +490,14 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
 
             {/* Quality rating overview */}
             <div className="rounded-xl border border-[#222222] bg-[#111111] p-6 flex flex-col items-center justify-center text-center">
-              <span className="text-5xl font-black font-display text-[#00E5A0]">{product.rating}</span>
+              <span className="text-5xl font-black font-display text-[#22D3EE]">{product.rating}</span>
               <div className="flex gap-0.5 mt-2">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
                     className={`size-4 ${
                       i < Math.floor(product.rating)
-                        ? 'fill-[#00E5A0] text-[#00E5A0]'
+                        ? 'fill-[#22D3EE] text-[#22D3EE]'
                         : 'fill-[#222222] text-[#222222]'
                     }`}
                   />
@@ -517,7 +517,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
             {product.faqs && product.faqs.length > 0 ? (
               product.faqs.map((faq, idx) => (
                 <div key={idx} className="rounded-xl border border-[#222222] bg-[#111111] p-5 flex gap-3.5">
-                  <HelpCircle className="size-5 text-[#00E5A0] shrink-0 mt-0.5" />
+                  <HelpCircle className="size-5 text-[#8B5CF6] shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-sm font-semibold text-[#F5F5F5]">{faq.question}</h4>
                     <p className="mt-2 text-sm text-[#888888] leading-relaxed">{faq.answer}</p>
@@ -527,7 +527,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
             ) : (
               <>
                 <div className="rounded-xl border border-[#222222] bg-[#111111] p-5 flex gap-3.5">
-                  <HelpCircle className="size-5 text-[#00E5A0] shrink-0 mt-0.5" />
+                  <HelpCircle className="size-5 text-[#8B5CF6] shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-sm font-semibold text-[#F5F5F5]">¿Tienen garantía de cambio?</h4>
                     <p className="mt-2 text-sm text-[#888888] leading-relaxed">
@@ -536,7 +536,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                   </div>
                 </div>
                 <div className="rounded-xl border border-[#222222] bg-[#111111] p-5 flex gap-3.5">
-                  <HelpCircle className="size-5 text-[#00E5A0] shrink-0 mt-0.5" />
+                  <HelpCircle className="size-5 text-[#8B5CF6] shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-sm font-semibold text-[#F5F5F5]">¿Cómo rastreo mi envío?</h4>
                     <p className="mt-2 text-sm text-[#888888] leading-relaxed">

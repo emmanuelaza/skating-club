@@ -35,12 +35,12 @@ export function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#222222] px-6 py-5">
               <div className="flex items-center gap-3">
-                <ShoppingCart className="size-5 text-[#00E5A0]" />
+                <ShoppingCart className="size-5 text-[#8B5CF6]" />
                 <h2 className="font-display text-lg font-semibold text-[#F5F5F5]">
                   Carrito
                 </h2>
                 {items.length > 0 && (
-                  <span className="flex size-5 items-center justify-center rounded-full bg-[#00E5A0] text-[11px] font-bold text-[#0A0A0A]">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-[#8B5CF6] text-[11px] font-bold text-[#FFFFFF]">
                     {items.reduce((a, i) => a + i.quantity, 0)}
                   </span>
                 )}
@@ -48,7 +48,7 @@ export function CartDrawer() {
               <button
                 type="button"
                 onClick={closeCart}
-                className="flex size-8 items-center justify-center rounded-md border border-[#222222] text-[#888888] transition-colors hover:border-[#00E5A0] hover:text-[#F5F5F5]"
+                className="flex size-8 items-center justify-center rounded-md border border-[#222222] text-[#888888] transition-colors hover:border-[#8B5CF6] hover:text-[#FFFFFF]"
                 aria-label="Cerrar carrito"
               >
                 <X className="size-4" />
@@ -66,7 +66,7 @@ export function CartDrawer() {
                   <button
                     type="button"
                     onClick={closeCart}
-                    className="text-sm font-medium text-[#00E5A0] underline underline-offset-2"
+                    className="text-sm font-medium text-[#8B5CF6] underline underline-offset-2"
                   >
                     Explorar productos
                   </button>
@@ -113,7 +113,7 @@ export function CartDrawer() {
                             <button
                               type="button"
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="flex size-6 items-center justify-center rounded-full border border-[#222222] text-[#888888] transition-colors hover:border-[#00E5A0] hover:text-[#00E5A0]"
+                              className="flex size-6 items-center justify-center rounded-full border border-[#222222] text-[#888888] transition-colors hover:border-[#8B5CF6] hover:text-[#8B5CF6]"
                               aria-label="Reducir cantidad"
                             >
                               <Minus className="size-3" />
@@ -124,14 +124,14 @@ export function CartDrawer() {
                             <button
                               type="button"
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="flex size-6 items-center justify-center rounded-full border border-[#222222] text-[#888888] transition-colors hover:border-[#00E5A0] hover:text-[#00E5A0]"
+                              className="flex size-6 items-center justify-center rounded-full border border-[#222222] text-[#888888] transition-colors hover:border-[#8B5CF6] hover:text-[#8B5CF6]"
                               aria-label="Aumentar cantidad"
                             >
                               <Plus className="size-3" />
                             </button>
                           </div>
                           {/* Price */}
-                          <p className="font-display text-base font-bold text-[#00E5A0]">
+                          <p className="font-display text-base font-bold text-[#22D3EE]">
                             ${(item.price * item.quantity).toLocaleString('es-CO')}
                           </p>
                         </div>
@@ -148,7 +148,7 @@ export function CartDrawer() {
                 {/* Subtotal */}
                 <div className="mb-4 flex items-center justify-between">
                   <span className="text-sm text-[#888888]">Subtotal</span>
-                  <span className="font-display text-2xl font-bold text-[#00E5A0]">
+                  <span className="font-display text-2xl font-bold text-[#22D3EE]">
                     ${total.toLocaleString('es-CO')}
                   </span>
                 </div>
@@ -157,7 +157,7 @@ export function CartDrawer() {
                 <button
                   type="button"
                   disabled
-                  className="group relative w-full overflow-hidden rounded-lg border border-[#00E5A0]/40 px-6 py-3.5 text-sm font-semibold text-[#888888] transition-all duration-300 disabled:cursor-not-allowed"
+                  className="group relative w-full overflow-hidden rounded-lg border border-[#8B5CF6]/40 px-6 py-3.5 text-sm font-semibold text-[#888888] transition-all duration-300 disabled:cursor-not-allowed"
                 >
                   Finalizar compra
                 </button>
@@ -167,7 +167,7 @@ export function CartDrawer() {
 
                 {/* Shipping note */}
                 <div className="mt-4 flex items-center gap-2 rounded-lg bg-[#1A1A1A] px-3 py-2.5">
-                  <Truck className="size-4 shrink-0 text-[#00E5A0]" />
+                  <Truck className="size-4 shrink-0 text-[#8B5CF6]" />
                   <p className="text-xs text-[#888888]">
                     Envíos a todo el país — rápidos y seguros
                   </p>

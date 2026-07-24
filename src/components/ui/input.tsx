@@ -5,7 +5,7 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 /**
  * Input base. Borde por defecto `border-input` (#2A2A3A); el focus usa el ring
- * de acento (#00E5A0) definido en el sistema de diseño.
+ * de acento (#8B5CF6) definido en el sistema de diseño.
  */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {

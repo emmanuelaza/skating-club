@@ -43,7 +43,7 @@ export function FilterBar({
                 onClick={() => onCategoryChange(cat.slug)}
                 className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? 'border-[#00E5A0] bg-[#00E5A0]/[0.06] text-[#00E5A0]'
+                    ? 'border-[#8B5CF6] bg-[#8B5CF6]/[0.06] text-[#8B5CF6]'
                     : 'border-[#222222] bg-[#111111] text-[#888888] hover:border-[#333] hover:text-[#F5F5F5]'
                 }`}
               >
@@ -60,7 +60,7 @@ export function FilterBar({
         <select
           value={sortOrder}
           onChange={(e) => onSortChange(e.target.value)}
-          className="w-full appearance-none rounded-lg border border-[#222222] bg-[#111111] py-1.5 pl-3 pr-8 text-sm text-[#888888] outline-none transition-colors hover:border-[#333] focus:border-[#00E5A0] sm:w-auto"
+          className="w-full appearance-none rounded-lg border border-[#222222] bg-[#111111] py-1.5 pl-3 pr-8 text-sm text-[#888888] outline-none transition-colors hover:border-[#333] focus:border-[#8B5CF6] sm:w-auto"
           aria-label="Ordenar productos"
         >
           {SORT_OPTIONS.map((o) => (

@@ -81,7 +81,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
               <button
                 type="button"
                 onClick={onClose}
-                className="flex size-8 items-center justify-center rounded-md border border-[#222222] text-[#888888] transition-colors hover:border-[#00E5A0] hover:text-[#F5F5F5]"
+                className="flex size-8 items-center justify-center rounded-md border border-[#222222] text-[#888888] transition-colors hover:border-[#8B5CF6] hover:text-[#F5F5F5]"
                 aria-label="Cerrar"
               >
                 <X className="size-4" />
@@ -101,7 +101,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                     unoptimized={product.image.startsWith('http')}
                   />
                   {product.isNew && (
-                    <span className="absolute left-4 top-4 rounded-md bg-[#00E5A0] px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-[#0A0A0A]">
+                    <span className="absolute left-4 top-4 rounded-md bg-[#8B5CF6] px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-white">
                       Nuevo
                     </span>
                   )}
@@ -110,8 +110,8 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                     onClick={() => setLiked((l) => !l)}
                     className={`absolute right-4 top-4 flex size-9 items-center justify-center rounded-full border transition-all ${
                       liked
-                        ? 'border-[#00E5A0] bg-[#00E5A0]/20 text-[#00E5A0]'
-                        : 'border-[#222222] bg-black/40 text-[#888888] hover:border-[#00E5A0] hover:text-[#00E5A0]'
+                        ? 'border-[#8B5CF6] bg-[#8B5CF6]/20 text-[#8B5CF6]'
+                        : 'border-[#222222] bg-black/40 text-[#888888] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
                     }`}
                   >
                     <Heart className={`size-4 ${liked ? 'fill-current' : ''}`} />
@@ -129,7 +129,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                     </h2>
                   </div>
 
-                  <p className="font-display text-4xl font-black text-[#00E5A0]">
+                  <p className="font-display text-4xl font-black text-[#22D3EE]">
                     ${product.price.toLocaleString('es-CO')}
                   </p>
 
@@ -141,7 +141,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                           key={i}
                           className={`size-4 ${
                             i < Math.floor(product.rating)
-                              ? 'fill-[#00E5A0] text-[#00E5A0]'
+                              ? 'fill-[#22D3EE] text-[#22D3EE]'
                               : 'fill-[#222222] text-[#222222]'
                           }`}
                         />
@@ -168,7 +168,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                             onClick={() => setSelectedVariant(v)}
                             className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
                               selectedVariant === v
-                                ? 'border-[#00E5A0] bg-[#00E5A0]/10 text-[#00E5A0]'
+                                ? 'border-[#8B5CF6] bg-[#8B5CF6]/10 text-[#8B5CF6]'
                                 : 'border-[#222222] text-[#888888] hover:border-[#444] hover:text-[#F5F5F5]'
                             }`}
                           >
@@ -182,7 +182,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                   {/* Stock */}
                   <p className="text-sm text-[#888888]">
                     Stock disponible:{' '}
-                    <span className={product.stock > 5 ? 'text-[#00E5A0]' : 'text-yellow-400'}>
+                    <span className={product.stock > 5 ? 'text-[#8B5CF6]' : 'text-yellow-400'}>
                       {product.stock} unidades
                     </span>
                   </p>
@@ -191,10 +191,10 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                   <button
                     type="button"
                     onClick={handleAdd}
-                    className={`flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-4 text-base font-semibold transition-all duration-300 ${
+                    className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-base font-semibold transition-all duration-300 ${
                       added
-                        ? 'border-[#00E5A0] bg-[#00E5A0] text-[#0A0A0A]'
-                        : 'border-[#00E5A0] bg-transparent text-[#00E5A0] hover:bg-[#00E5A0] hover:text-[#0A0A0A]'
+                        ? 'bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] text-white border-0'
+                        : 'border border-[#8B5CF6] bg-transparent text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white'
                     }`}
                   >
                     <ShoppingCart className="size-5" />
@@ -205,7 +205,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
                   <div className="mt-2 grid grid-cols-4 gap-2 border-t border-[#222222] pt-4">
                     {trustItems.map(({ icon: Icon, label }) => (
                       <div key={label} className="flex flex-col items-center gap-1 text-center">
-                        <Icon className="size-4 text-[#00E5A0]" />
+                        <Icon className="size-4 text-[#8B5CF6]" />
                         <span className="text-[10px] text-[#888888]">{label}</span>
                       </div>
                     ))}

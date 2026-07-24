@@ -39,9 +39,9 @@ export function TrustBand() {
             <div key={title} className="flex flex-col items-center gap-3 text-center">
               <div
                 className="flex size-12 items-center justify-center rounded-full"
-                style={{ background: 'rgba(0,229,160,0.12)' }}
+                style={{ background: 'rgba(139, 92, 246, 0.18)' }}
               >
-                <Icon className="size-5 text-[#00E5A0]" />
+                <Icon className="size-5 text-[#8B5CF6]" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-[#F5F5F5]">{title}</p>

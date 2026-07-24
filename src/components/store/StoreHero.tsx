@@ -34,10 +34,10 @@ export function StoreHero() {
           }}
         />
 
-        {/* Green ambient glow behind the skate area */}
+        {/* Violet ambient glow behind the skate area */}
         <div
           aria-hidden
-          className="pointer-events-none absolute right-0 top-1/4 size-[400px] rounded-full bg-[#00E5A0]/10 blur-[120px] mix-blend-screen hidden lg:block"
+          className="pointer-events-none absolute right-0 top-1/4 size-[400px] rounded-full bg-[#8B5CF6]/10 blur-[120px] mix-blend-screen hidden lg:block"
           style={{
             animation: 'glowPulse 6s ease-in-out infinite alternate',
           }}
@@ -102,7 +102,7 @@ export function StoreHero() {
           
           {/* Subheading */}
           <motion.div {...fadeUp(0.05)}>
-            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#00E5A0]">
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#8B5CF6]">
               Tienda Oficial
             </span>
           </motion.div>
@@ -112,8 +112,8 @@ export function StoreHero() {
             <h1 className="font-display text-3xl sm:text-4xl lg:text-[2.85rem] font-bold leading-[1.1] tracking-tight text-[#F5F5F5]">
               Equipamiento de <br className="hidden sm:inline" />
               <span
-                className="text-[#00E5A0]"
-                style={{ textShadow: '0 0 40px rgba(0,229,160,0.2)' }}
+                className="text-[#8B5CF6]"
+                style={{ textShadow: '0 0 40px rgba(139,92,246,0.2)' }}
               >
                 alto rendimiento
               </span>
@@ -134,7 +134,7 @@ export function StoreHero() {
             <a
               href="#productos"
               id="store-cta-primary"
-              className="group flex items-center gap-2 rounded-lg border border-[#00E5A0] bg-[#00E5A0] px-[18px] py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#0A0A0A] transition-all duration-300 hover:bg-[#00C988] hover:border-[#00C988] hover:shadow-[0_0_24px_rgba(0,229,160,0.3)]"
+              className="group flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] px-[18px] py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:from-[#7c4df2] hover:to-[#5457e5] hover:shadow-[0_0_24px_rgba(139,92,246,0.3)]"
             >
               Explorar productos
               <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -156,7 +156,7 @@ export function StoreHero() {
           >
             {trustBadges.map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-1.5">
-                <Icon className="size-3.5 text-[#00E5A0]/50" />
+                <Icon className="size-3.5 text-[#8B5CF6]/50" />
                 <span className="text-[10px] text-[#888888] font-medium">{label}</span>
               </div>
             ))}

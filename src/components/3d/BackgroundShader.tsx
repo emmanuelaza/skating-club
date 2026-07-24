@@ -47,7 +47,9 @@ export default function BackgroundShader() {
       const dummy = new THREE.Object3D();
       const points: { x: number; z: number }[] = [];
       const colorOff = new THREE.Color(0x111111);
-      const colorOn = new THREE.Color(0x22d3ee);
+      const colorViolet = new THREE.Color(0x8b5cf6);
+      const colorIndigo = new THREE.Color(0x6366f1);
+      const colorCyan = new THREE.Color(0x22d3ee);
       const tmpColor = new THREE.Color();
 
       let i = 0;
@@ -127,7 +129,14 @@ export default function BackgroundShader() {
           dummy.updateMatrix();
           mesh.setMatrixAt(idx, dummy.matrix);
 
-          tmpColor.lerpColors(colorOff, colorOn, Math.min(1, totalHeight * 3));
+          const t = Math.max(0, Math.min(1, (p.x + p.z + SPAN) / (2 * SPAN)));
+          const activeColor = new THREE.Color();
+          if (t < 0.5) {
+            activeColor.lerpColors(colorViolet, colorIndigo, t * 2);
+          } else {
+            activeColor.lerpColors(colorIndigo, colorCyan, (t - 0.5) * 2);
+          }
+          tmpColor.lerpColors(colorOff, activeColor, Math.min(1, totalHeight * 3));
           mesh.setColorAt(idx, tmpColor);
         }
 

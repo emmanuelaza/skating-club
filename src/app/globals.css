@@ -3,49 +3,50 @@
 @tailwind utilities;
 
 /*
- * Sistema de diseño — Skating Club (tema oscuro personalizado).
+ * Sistema de diseño — Grandes Paisas (tema oscuro premium).
  * Paleta principal:
  *   Background #0A0A0A · Surface #111111 · Surface elevated #1A1A1A
- *   Border #222222 · Accent #00E5A0 · Accent hover #00C988
- *   Texto primario #F5F5F5 · Texto secundario #888888
+ *   Border #222222 · Accent #8B5CF6 (Violeta) · Accent hover #22D3EE (Cyan)
+ *   Texto principal #FFFFFF · Texto secundario #D1D5DB · Texto auxiliar #9CA3AF
  */
 @layer base {
   :root {
     /* #0A0A0A */
     --background: 0 0% 4%;
-    /* #F5F5F5 */
-    --foreground: 0 0% 96%;
+    /* #FFFFFF (principal) */
+    --foreground: 0 0% 100%;
 
     /* Surface #111111 */
     --card: 0 0% 7%;
-    --card-foreground: 0 0% 96%;
+    /* #D1D5DB (secundario) */
+    --card-foreground: 220 14% 84%;
 
     /* Surface elevated #1A1A1A */
     --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 96%;
+    --popover-foreground: 220 14% 84%;
 
-    /* Accent Violeta a Cyan */
-    --primary: 262 83% 65%;
+    /* Accent Violeta #8B5CF6 */
+    --primary: 258 91% 66%;
     --primary-foreground: 0 0% 100%;
-    /* Accent hover #00C988 */
-    --primary-hover: 189 94% 43%;
+    /* Accent hover Cyan #22D3EE */
+    --primary-hover: 189 94% 53%;
 
-    /* Surface elevated para superficies secundarias */
+    /* Surface elevated #1A1A1A para superficies secundarias */
     --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 96%;
+    --secondary-foreground: 220 14% 84%;
 
     /* Surface para estados muted */
     --muted: 0 0% 7%;
-    /* Texto secundario #888888 */
-    --muted-foreground: 0 0% 53%;
+    /* Texto auxiliar #9CA3AF */
+    --muted-foreground: 220 13% 65%;
 
     /* Hover/active sutil sobre la superficie (#222222) */
     --accent: 0 0% 13%;
-    --accent-foreground: 0 0% 96%;
+    --accent-foreground: 220 14% 84%;
 
     /* Error #EF4444 */
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 96%;
+    --destructive-foreground: 0 0% 100%;
 
     /* Éxito #22C55E */
     --success: 142 71% 45%;
@@ -59,10 +60,10 @@
     --border: 0 0% 13%;
     --input: 0 0% 13%;
     /* Ring = accent */
-    --ring: 262 83% 65%;
+    --ring: 258 91% 66%;
 
-    /* Glow del acento — rgba(167, 139, 250, 0.15) */
-    --accent-glow: rgba(167, 139, 250, 0.15);
+    /* Glow del acento — rgba(139, 92, 246, 0.18) */
+    --accent-glow: rgba(139, 92, 246, 0.18);
 
     /* Cards 8px -> lg; botones 6px -> md; inputs 4px -> sm */
     --radius: 0.5rem;
@@ -92,14 +93,14 @@
 @keyframes textGlow {
   0%,
   100% {
-    color: #a78bfa;
-    text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+    color: #8b5cf6;
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
   }
   50% {
     color: #22d3ee;
     text-shadow:
       0 0 30px rgba(34, 211, 238, 0.7),
-      0 0 60px rgba(167, 139, 250, 0.3);
+      0 0 60px rgba(139, 92, 246, 0.3);
   }
 }
 
@@ -111,7 +112,7 @@
 @media (prefers-reduced-motion: reduce) {
   .glow-word {
     animation: none;
-    color: #a78bfa;
+    color: #8b5cf6;
   }
 }
 
@@ -126,7 +127,7 @@
     inset: 0;
     background: radial-gradient(
       circle 250px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(167, 139, 250, 0.08),
+      rgba(139, 92, 246, 0.15),
       transparent 70%
     );
     opacity: 0;

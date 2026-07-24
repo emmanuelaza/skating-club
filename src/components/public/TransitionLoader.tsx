@@ -86,11 +86,11 @@ export function TransitionLoader() {
             <span className="font-display text-xs font-black uppercase tracking-[0.3em] text-[#F5F5F5]">
               Skating Club
             </span>
-            {/* Acero Verde Menta progress line */}
+            {/* Grandes Paisas progress line */}
             <div className="relative h-[2px] w-[120px] overflow-hidden rounded-full bg-[#222222]">
               <motion.div
-                className="absolute inset-y-0 left-0 bg-[#00E5A0]"
-                style={{ boxShadow: '0 0 8px #00E5A0' }}
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#8B5CF6] to-[#22D3EE]"
+                style={{ boxShadow: '0 0 8px rgba(139, 92, 246, 0.5)' }}
                 initial={{ left: '-100%', width: '100%' }}
                 animate={{ left: '100%' }}
                 transition={{

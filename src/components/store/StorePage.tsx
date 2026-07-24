@@ -47,7 +47,7 @@ export function StorePage() {
             <Home className="size-3" />
           </Link>
           <ChevronRight className="size-3" />
-          <span className="font-medium text-[#00E5A0]">Tienda</span>
+          <span className="font-medium text-[#8B5CF6]">Tienda</span>
         </nav>
       </div>
 
@@ -92,11 +92,11 @@ export function StorePage() {
         <button
           type="button"
           onClick={openCart}
-          className="fixed bottom-6 right-6 z-40 flex size-14 items-center justify-center rounded-full bg-[#00E5A0] text-[#0A0A0A] shadow-[0_8px_24px_rgba(0,229,160,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 sm:hidden"
+          className="fixed bottom-6 right-6 z-40 flex size-14 items-center justify-center rounded-full bg-[#8B5CF6] text-white shadow-[0_8px_24px_rgba(139,92,246,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 sm:hidden"
           aria-label="Abrir carrito flotante"
         >
           <ShoppingCart className="size-6" />
-          <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-[#F5F5F5] text-[10px] font-bold text-[#0A0A0A] border-2 border-[#00E5A0]">
+          <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-[#F5F5F5] text-[10px] font-bold text-[#8B5CF6] border-2 border-[#8B5CF6]">
             {itemCount}
           </span>
         </button>

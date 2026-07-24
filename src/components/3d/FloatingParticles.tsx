@@ -49,7 +49,7 @@ export default function FloatingParticles({ className }: { className?: string })
       geometry.setAttribute('position', positionAttribute);
 
       const material = new THREE.PointsMaterial({
-        color: 0x00E5A0,
+        color: 0x8b5cf6,
         size: 0.03,
         transparent: true,
         opacity: 0.4,
