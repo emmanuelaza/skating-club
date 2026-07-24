@@ -38,16 +38,18 @@ export function StoreHero() {
     <section className="relative overflow-hidden bg-[#0A0A0A] py-10 sm:py-14 lg:py-16 flex items-center min-h-[420px] lg:min-h-[480px]">
       {/* ── BACKGROUND VIDEO & OVERLAYS ── */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        {/* Background ambient video (faded sutil en el fondo) */}
+        {/* Background ambient video */}
         <video
-          src="/hero-store.webm"
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          className="absolute right-0 top-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto object-cover opacity-20 blur-sm scale-105"
-        />
+          className="absolute right-0 top-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto object-cover opacity-25 blur-sm scale-105"
+        >
+          <source src="/hero-store.mp4" type="video/mp4" />
+          <source src="/hero-store.webm" type="video/mp4" />
+        </video>
 
         {/* Halo violáceo ambiental sutil */}
         <div
@@ -146,7 +148,6 @@ export function StoreHero() {
             >
               <video
                 ref={videoRef}
-                src="/hero-store.webm"
                 autoPlay
                 muted
                 loop
@@ -155,7 +156,8 @@ export function StoreHero() {
                 onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
                 className="w-full h-auto max-h-[380px] sm:max-h-[420px] lg:max-h-[460px] object-cover rounded-2xl select-none"
               >
-                <source src="/hero-store.webm" type="video/webm" />
+                <source src="/hero-store.mp4" type="video/mp4" />
+                <source src="/hero-store.webm" type="video/mp4" />
               </video>
             </motion.div>
           </div>
