@@ -69,10 +69,10 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
   // Inicializar variantes
   React.useEffect(() => {
     if (product.variants?.length) {
-      setSelectedVariant(product.variants[0]);
+      setSelectedVariant(product.variants[0] ?? null);
     }
     if (product.colors?.length) {
-      setSelectedColor(product.colors[0]);
+      setSelectedColor(product.colors[0] ?? null);
     }
     setActiveImageIndex(0);
     setQuantity(1);
@@ -149,13 +149,13 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
               onMouseLeave={handleMouseLeave}
             >
               <Image
-                src={productImages[activeImageIndex]}
+                src={productImages[activeImageIndex] || product.image}
                 alt={product.name}
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 55vw"
                 className="object-contain p-8 transition-transform duration-300"
-                unoptimized={productImages[activeImageIndex].startsWith('http') || productImages[activeImageIndex].startsWith('/hero-store.jpg')}
+                unoptimized={Boolean(productImages[activeImageIndex]?.startsWith('http') || productImages[activeImageIndex]?.startsWith('/hero-store.jpg'))}
               />
 
               {/* Zoom Overlay (Desktop only) */}

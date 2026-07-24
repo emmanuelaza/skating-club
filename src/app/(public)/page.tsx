@@ -221,27 +221,27 @@ export default function PublicHomePage() {
             priority
             loading="eager"
             sizes="(max-width: 768px) 100vw"
-            className="object-cover object-[center_bottom]"
+            className="object-cover object-[right_bottom]"
           />
         </div>
 
-        {/* Capa 2 — Overlay vertical: oscurece la parte superior para el texto */}
+        {/* Capa 2 — Overlay vertical: oscurece la parte superior para el texto sobre espacio negativo */}
         <div
           className="pointer-events-none absolute inset-0 z-[2] md:hidden"
           aria-hidden="true"
           style={{
             background:
-              'linear-gradient(to bottom, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.40) 50%, transparent 65%)',
+              'linear-gradient(to bottom, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.50) 40%, transparent 65%)',
           }}
         />
 
-        {/* Capa 3 — Overlay lateral izquierdo sutil */}
+        {/* Capa 3 — Overlay lateral izquierdo para garantizar contraste absoluto */}
         <div
           className="pointer-events-none absolute inset-0 z-[3] md:hidden"
           aria-hidden="true"
           style={{
             background:
-              'linear-gradient(to right, rgba(10,10,10,0.30) 0%, transparent 50%)',
+              'linear-gradient(to right, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0.30) 45%, transparent 70%)',
           }}
         />
 
@@ -251,13 +251,13 @@ export default function PublicHomePage() {
           aria-hidden="true"
           style={{
             background:
-              'linear-gradient(to bottom, transparent 0%, #0A0A0A 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(10,10,10,0.7) 40%, #0A0A0A 100%)',
           }}
         />
 
         {/* Capa 6 — Líneas de velocidad extendidas (CSS puro) */}
         <div className="pointer-events-none absolute inset-0 z-[5] md:hidden" aria-hidden="true">
-          {/* 4 líneas delgadas alineadas visualmente con las de la imagen */}
+          {/* 4 líneas delgadas alineadas visualmente con la estela de la patinadora */}
           {[
             { top: '58%', opacity: 0.55 },
             { top: '61%', opacity: 0.35 },
@@ -271,7 +271,7 @@ export default function PublicHomePage() {
                 top: line.top,
                 width: '55%',
                 height: i < 2 ? '1.5px' : '1px',
-            background: `linear-gradient(to left, transparent 0%, rgba(34,211,238,${line.opacity}) 100%)`,
+                background: `linear-gradient(to left, transparent 0%, rgba(34,211,238,${line.opacity}) 100%)`,
               }}
             />
           ))}
@@ -281,8 +281,8 @@ export default function PublicHomePage() {
         <div
           className={cn(
             'relative z-[10] w-full',
-            // MOBILE: alineado arriba con padding top optimizado (navbar h-16 + 16px)
-            'flex flex-col items-start px-5 pt-[80px]',
+            // MOBILE: alineado arriba en el espacio negativo superior izquierdo (padding top ajustado)
+            'flex flex-col items-start px-6 pt-[88px]',
             // DESKTOP: centrado como antes
             'md:mx-auto md:flex md:max-w-4xl md:flex-col md:items-center md:px-6 md:pb-16 md:pt-32 md:text-center',
             'lg:py-0',

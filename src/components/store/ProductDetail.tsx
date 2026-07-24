@@ -22,7 +22,7 @@ export function ProductDetail({ product, onClose }: ProductDetailProps) {
 
   React.useEffect(() => {
     if (product?.variants?.length) {
-      setSelectedVariant(product.variants[0]);
+      setSelectedVariant(product.variants[0] ?? null);
     }
     setAdded(false);
     setLiked(false);
