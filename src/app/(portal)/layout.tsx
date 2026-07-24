@@ -12,7 +12,7 @@ import { PortalNav } from '@/components/portal/PortalNav';
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const profile = await requireRole(PORTAL_ROLES);
   const tenant = await getCurrentTenant();
-  const clubName = tenant?.name ?? 'Skating Club';
+  const clubName = tenant?.name ?? 'Grandes Paisas';
   const userName = profile.full_name ?? profile.email;
 
   return (

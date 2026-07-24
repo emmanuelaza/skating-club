@@ -9,7 +9,7 @@ export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getSiteConfig();
-  const name = config?.name ?? 'Skating Club';
+  const name = config?.name ?? 'Grandes Paisas';
   return { title: `Contacto · ${name}`, description: `Ponte en contacto con ${name}.` };
 }
 
@@ -18,7 +18,7 @@ export default async function ContactoPage() {
   const email = config?.contact?.email;
   const phone = config?.contact?.phone;
   const address = config?.contact?.address;
-  const clubName = config?.name ?? tenant?.name ?? 'Skating Club';
+  const clubName = config?.name ?? tenant?.name ?? 'Grandes Paisas';
 
   return (
     <>

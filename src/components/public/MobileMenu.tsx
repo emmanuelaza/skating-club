@@ -4,10 +4,11 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Snowflake } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 import { PUBLIC_NAV } from './nav-items';
 
 /**
@@ -63,18 +64,7 @@ export function MobileMenu({ clubName }: { clubName: string }) {
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
                 >
                   <div className="flex h-16 items-center justify-between px-6">
-                    <Link
-                      href="/"
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-2"
-                    >
-                      <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Snowflake className="size-5" aria-hidden />
-                      </span>
-                      <span className="font-display text-lg font-bold tracking-tight text-foreground">
-                        {clubName}
-                      </span>
-                    </Link>
+                    <BrandLogo onClick={() => setOpen(false)} />
                     <button
                       type="button"
                       onClick={() => setOpen(false)}

@@ -12,7 +12,7 @@ function benefits(features: unknown): string[] {
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getSiteConfig();
-  const name = config?.name ?? 'Skating Club';
+  const name = config?.name ?? 'Grandes Paisas';
   return {
     title: `Planes · ${name}`,
     description: 'Planes de membresía y precios.',

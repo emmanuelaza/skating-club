@@ -84,7 +84,7 @@ export function TransitionLoader() {
           <div className="flex flex-col items-center gap-4">
             {/* Premium minimal label */}
             <span className="font-display text-xs font-black uppercase tracking-[0.3em] text-[#F5F5F5]">
-              Skating Club
+              Grandes Paisas
             </span>
             {/* Grandes Paisas progress line */}
             <div className="relative h-[2px] w-[120px] overflow-hidden rounded-full bg-[#222222]">

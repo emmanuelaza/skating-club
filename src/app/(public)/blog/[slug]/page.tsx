@@ -24,7 +24,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const [post, config] = await Promise.all([getPostBySlug(slug), getSiteConfig()]);
-  const name = config?.name ?? 'Skating Club';
+  const name = config?.name ?? 'Grandes Paisas';
   if (!post) return { title: `Blog · ${name}` };
   const cover = img(post.mainImage, 1200);
   return {

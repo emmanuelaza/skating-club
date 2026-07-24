@@ -26,8 +26,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Skating Club',
-    template: '%s · Skating Club',
+    default: 'Grandes Paisas',
+    template: '%s · Grandes Paisas',
   },
   description: 'Plataforma multi-sede para clubes de patinaje.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Skating Club',
+    title: 'Grandes Paisas',
   },
 };
 

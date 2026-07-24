@@ -21,7 +21,7 @@ function readingMinutes(excerpt?: string): number | undefined {
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getSiteConfig();
-  const name = config?.name ?? 'Skating Club';
+  const name = config?.name ?? 'Grandes Paisas';
   return { title: `Blog · ${name}`, description: 'Noticias, consejos y comunidad.' };
 }
 

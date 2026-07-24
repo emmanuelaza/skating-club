@@ -5,7 +5,7 @@ import { PageTransition } from '@/components/public/PageTransition';
 import { TransitionLoader } from '@/components/public/TransitionLoader';
 import { CartProvider } from '@/components/store/CartProvider';
 
-const CLUB_NAME = 'Skating Club';
+const CLUB_NAME = 'Grandes Paisas';
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (

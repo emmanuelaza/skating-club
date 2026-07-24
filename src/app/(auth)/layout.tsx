@@ -7,7 +7,7 @@ import { getCurrentTenant } from '@/lib/tenant';
  */
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
   const tenant = await getCurrentTenant();
-  const clubName = tenant?.name ?? 'Skating Club';
+  const clubName = tenant?.name ?? 'Grandes Paisas';
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">

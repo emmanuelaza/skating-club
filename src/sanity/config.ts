@@ -6,7 +6,7 @@ import { apiVersion, dataset, projectId } from './env';
 
 export default defineConfig({
   name: 'skating-club',
-  title: 'Skating Club',
+  title: 'Grandes Paisas',
   basePath: '/studio',
   projectId,
   dataset,

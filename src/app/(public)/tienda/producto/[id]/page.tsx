@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!product) {
     return {
-      title: 'Producto No Encontrado · Skating Club',
+      title: 'Producto No Encontrado · Grandes Paisas',
     };
   }
 

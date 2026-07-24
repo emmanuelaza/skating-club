@@ -18,7 +18,7 @@ function img(source?: SanityImageSource): string | null {
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getSiteConfig();
-  const name = config?.name ?? 'Skating Club';
+  const name = config?.name ?? 'Grandes Paisas';
   return {
     title: `Clases · ${name}`,
     description: 'Tipos de clase para todos los niveles.',

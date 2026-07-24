@@ -168,7 +168,7 @@ export const PRODUCTS: Product[] = [
     reviews: 55,
     isNew: true,
     image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80',
-    description: 'Jersey técnico ultraligero, tejido DryFit, diseño exclusivo Skating Club. Alta transpirabilidad.',
+    description: 'Jersey técnico ultraligero, tejido DryFit, diseño exclusivo Grandes Paisas. Alta transpirabilidad.',
     variants: ['XS', 'S', 'M', 'L', 'XL'],
     stock: 25
   },

@@ -23,11 +23,11 @@ import {
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Skating Club · El arte de rodar con precisión',
+  title: 'Grandes Paisas · El arte de rodar con precisión',
   description:
     'Club de patinaje profesional en Bogotá. Clases para todos los niveles, instructores certificados y una comunidad que te impulsa.',
   openGraph: {
-    title: 'Skating Club',
+    title: 'Grandes Paisas',
     description: 'El arte de rodar con precisión. Bogotá, Colombia.',
     type: 'website',
   },

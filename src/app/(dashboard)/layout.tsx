@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <DashboardShell
-      clubName={tenant?.name ?? 'Skating Club'}
+      clubName={tenant?.name ?? 'Grandes Paisas'}
       userName={profile.full_name ?? profile.email}
       roleLabel={ROLE_LABELS[profile.role]}
       avatarUrl={profile.avatar_url}

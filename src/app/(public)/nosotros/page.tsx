@@ -28,7 +28,7 @@ const VALUES: { icon: LucideIcon; title: string; text: string }[] = [
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getSiteConfig();
-  const name = config?.name ?? 'Skating Club';
+  const name = config?.name ?? 'Grandes Paisas';
   return {
     title: `Nosotros · ${name}`,
     description: `Conoce la historia y el equipo de ${name}.`,

@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Snowflake, Search, User, ShoppingCart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 import { PUBLIC_NAV } from './nav-items';
 import { PUBLIC_CONTAINER } from './Section';
 import { MobileMenu } from './MobileMenu';
 import { useCart } from '@/components/store/CartProvider';
 
-export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
+export function Navbar({ clubName = 'Grandes Paisas' }: { clubName?: string }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
@@ -35,14 +36,7 @@ export function Navbar({ clubName = 'Skating Club' }: { clubName?: string }) {
     >
       <div className={cn(PUBLIC_CONTAINER, 'flex h-16 items-center justify-between gap-4')}>
         {/* Logo */}
-        <Link href="/" prefetch className="flex items-center gap-2 shrink-0">
-          <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary">
-            <Snowflake className="size-5" aria-hidden />
-          </span>
-          <span className="font-display text-lg font-bold tracking-tight text-[#F5F5F5]">
-            {clubName}
-          </span>
-        </Link>
+        <BrandLogo />
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 lg:flex">

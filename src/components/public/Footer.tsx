@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import type { Route } from 'next';
-import { Snowflake, Instagram, Facebook, Music2, Mail, Phone, MapPin } from 'lucide-react';
+import { Instagram, Facebook, Music2, Mail, Phone, MapPin } from 'lucide-react';
 import { PUBLIC_CONTAINER } from './Section';
 import { cn } from '@/lib/utils';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 
 const CLUB_LINKS: { label: string; href: Route }[] = [
   { label: 'Inicio', href: '/' as Route },
@@ -19,21 +20,14 @@ const SOCIAL = [
   { label: 'Facebook', icon: Facebook, href: 'https://facebook.com' },
 ];
 
-export function Footer({ clubName = 'Skating Club' }: { clubName?: string }) {
+export function Footer({ clubName = 'Grandes Paisas' }: { clubName?: string }) {
   const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-border bg-background">
       <div className={cn(PUBLIC_CONTAINER, 'grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4')}>
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary">
-              <Snowflake className="size-5" aria-hidden />
-            </span>
-            <span className="font-display text-lg font-bold tracking-tight text-foreground">
-              {clubName}
-            </span>
-          </div>
+          <BrandLogo />
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
             El arte de rodar con precisión. Clases, comunidad y competencia para todos los niveles.
           </p>

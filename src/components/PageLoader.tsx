@@ -43,7 +43,7 @@ export default function PageLoader() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              Skating Club
+              Grandes Paisas
             </motion.span>
 
             {/* Línea de Carga Premium de Grandes Paisas */}
