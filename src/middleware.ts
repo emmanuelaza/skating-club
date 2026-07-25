@@ -110,7 +110,14 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   let role: UserRole | null = null;
   if (needsRole) {
-    const { data: profile, error: profileErr } = await supabase
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const clientForProfile = serviceRoleKey
+      ? createServerClient<Database>(url, serviceRoleKey, {
+          cookies: { getAll: () => [], setAll: () => {} },
+        })
+      : supabase;
+
+    const { data: profile, error: profileErr } = await clientForProfile
       .from('profiles')
       .select('role')
       .eq('auth_user_id', user.id)
