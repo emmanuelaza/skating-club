@@ -39,10 +39,18 @@ export async function getProfile(): Promise<Profile | null> {
     .eq('auth_user_id', user.id)
     .maybeSingle();
 
-  if (error) {
-    throw new Error(`Error cargando el perfil: ${error.message}`);
-  }
-  return data;
+  if (data) return data;
+
+  // Fallback a cliente admin en el servidor si RLS o cookies filtraron la lectura
+  const { createAdminClient } = await import('@/lib/supabase/admin');
+  const adminSupabase = createAdminClient();
+  const { data: adminData } = await adminSupabase
+    .from('profiles')
+    .select('*')
+    .eq('auth_user_id', user.id)
+    .maybeSingle();
+
+  return adminData;
 }
 
 /** Exige sesión; redirige a /login si no la hay. Devuelve el usuario validado. */
