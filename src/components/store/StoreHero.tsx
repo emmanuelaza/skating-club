@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, LayoutGrid, ShieldCheck, Truck, Lock } from 'lucide-react';
 import { PUBLIC_CONTAINER } from '@/components/public/Section';
@@ -18,64 +19,45 @@ const trustBadges = [
 ];
 
 export function StoreHero() {
-  const videoRef = React.useRef<HTMLVideoElement | null>(null);
-
-  React.useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.defaultMuted = true;
-      video.muted = true;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Autoplay fallbacks
-        });
-      }
-    }
-  }, []);
-
   return (
-    <section className="relative overflow-hidden bg-[#0A0A0A] py-10 sm:py-14 lg:py-16 flex items-center min-h-[420px] lg:min-h-[480px]">
-      {/* ── BACKGROUND VIDEO & OVERLAYS ── */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        {/* Background ambient video */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute right-0 top-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto object-cover opacity-25 blur-sm scale-105"
-        >
-          <source src="/hero-store.mp4" type="video/mp4" />
-          <source src="/hero-store.webm" type="video/mp4" />
-        </video>
+    <section className="relative overflow-hidden bg-[#0A0A0A] py-10 sm:py-14 lg:py-16 flex items-center min-h-[420px] lg:min-h-[520px]">
 
-        {/* Halo violáceo ambiental sutil */}
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 size-[500px] rounded-full bg-[#8B5CF6]/15 blur-[140px] mix-blend-screen"
+      {/* ── IMAGEN DE FONDO ── */}
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        <Image
+          src="/hero-store-bg.jpg"
+          alt=""
+          fill
+          priority
+          quality={90}
+          className="object-cover object-center"
+          sizes="100vw"
         />
 
-        {/* Overlay de degradado horizontal (Oscurece la izquierda para legibilidad perfecta del texto) */}
-        <div 
+        {/* Overlay oscuro izquierda → transparente derecha: legibilidad del texto */}
+        <div
           className="absolute inset-0 z-10"
           style={{
-            background: 'linear-gradient(to right, #0A0A0A 0%, #0A0A0A 40%, rgba(10,10,10,0.85) 60%, rgba(10,10,10,0.4) 100%)'
+            background:
+              'linear-gradient(to right, #0A0A0A 0%, #0A0A0A 35%, rgba(10,10,10,0.75) 58%, rgba(10,10,10,0.15) 100%)',
           }}
         />
 
-        {/* Gradientes superior e inferior para integrarse con la página */}
-        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0A0A0A] to-transparent z-10" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0A0A0A] to-transparent z-10" />
+        {/* Halo violáceo ambiental */}
+        <div className="absolute right-[10%] top-1/2 -translate-y-1/2 size-[420px] rounded-full bg-[#8B5CF6]/10 blur-[120px] mix-blend-screen z-10" />
+
+        {/* Fade superior e inferior para integración con la página */}
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#0A0A0A] to-transparent z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0A0A0A] to-transparent z-10" />
       </div>
 
-      {/* ── CONTENT & PROTAGONIST VIDEO ── */}
+      {/* ── CONTENIDO ── */}
       <div className={`${PUBLIC_CONTAINER} relative z-20 w-full`}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
+
           {/* COLUMNA IZQUIERDA: Texto y CTAs */}
           <div className="lg:col-span-5 flex flex-col gap-5 sm:gap-6 text-left">
-            
+
             {/* Eyebrow */}
             <motion.div {...fadeUp(0.05)}>
               <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#8B5CF6]">
@@ -101,7 +83,7 @@ export function StoreHero() {
               {...fadeUp(0.25)}
               className="text-xs sm:text-sm leading-relaxed text-[#888888] max-w-sm sm:max-w-md"
             >
-              Navega por nuestro catálogo exclusivo de patines profesionales, 
+              Navega por nuestro catálogo exclusivo de patines profesionales,
               protecciones certificadas y repuestos diseñados para rodar sin límites.
             </motion.p>
 
@@ -125,9 +107,9 @@ export function StoreHero() {
               </a>
             </motion.div>
 
-            {/* Indicators */}
-            <motion.div 
-              {...fadeUp(0.45)} 
+            {/* Trust badges */}
+            <motion.div
+              {...fadeUp(0.45)}
               className="flex items-center gap-4 sm:gap-5 mt-2 border-t border-[#222222]/40 pt-4 max-w-xs sm:max-w-sm"
             >
               {trustBadges.map(({ icon: Icon, label }) => (
@@ -140,27 +122,8 @@ export function StoreHero() {
 
           </div>
 
-          {/* COLUMNA DERECHA: Video como protagonista visual nítido y brillante */}
-          <div className="lg:col-span-7 relative w-full flex items-center justify-center mt-4 lg:mt-0">
-            <motion.div
-              {...fadeUp(0.2)}
-              className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-[#222222]/60 shadow-[0_10px_40px_rgba(0,0,0,0.8)] bg-[#0A0A0A]"
-            >
-              <video
-                ref={videoRef}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
-                className="w-full h-auto max-h-[380px] sm:max-h-[420px] lg:max-h-[460px] object-cover rounded-2xl select-none"
-              >
-                <source src="/hero-store.mp4" type="video/mp4" />
-                <source src="/hero-store.webm" type="video/mp4" />
-              </video>
-            </motion.div>
-          </div>
+          {/* COLUMNA DERECHA: vacía — la imagen de fondo es el protagonista visual */}
+          <div className="hidden lg:block lg:col-span-7" aria-hidden="true" />
 
         </div>
       </div>
