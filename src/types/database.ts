@@ -664,8 +664,6 @@ export interface Database {
           title: string;
           body: string;
           audience: AnnouncementAudience;
-          published: boolean;
-          published_at: string | null;
           author_id: string | null;
           created_at: string;
           updated_at: string;
@@ -676,8 +674,6 @@ export interface Database {
           title: string;
           body: string;
           audience?: AnnouncementAudience;
-          published?: boolean;
-          published_at?: string | null;
           author_id?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -688,8 +684,6 @@ export interface Database {
           title?: string;
           body?: string;
           audience?: AnnouncementAudience;
-          published?: boolean;
-          published_at?: string | null;
           author_id?: string | null;
           created_at?: string;
           updated_at?: string;

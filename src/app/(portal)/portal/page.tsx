@@ -39,10 +39,9 @@ export default async function PortalHomePage() {
     supabase.from('loyalty_points').select('type, points').eq('profile_id', profile.id),
     supabase
       .from('announcements')
-      .select('id, title, body, published_at')
-      .eq('published', true)
+      .select('id, title, body, created_at')
       .in('audience', ['all', 'members'])
-      .order('published_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(5),
   ]);
   if (bookingsResult.error) throw new Error(bookingsResult.error.message);
