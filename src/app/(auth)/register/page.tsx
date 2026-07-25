@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Mail, Lock, Eye, EyeOff, Loader2, MailCheck, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import { signUpAction } from '@/lib/actions/auth';
 import { signUpSchema, type SignUpInput } from '@/lib/validations/auth';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,6 @@ import {
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -41,43 +40,12 @@ export default function RegisterPage() {
     formData.set('password', values.password);
     formData.set('confirmPassword', values.confirmPassword);
     startTransition(async () => {
+      // El action hace redirect() en caso de éxito: si llegamos aquí es un error.
       const result = await signUpAction(formData);
-      if (result.ok) {
-        setSubmittedEmail(values.email);
-      } else {
+      if (!result.ok) {
         setFormError(result.error);
       }
     });
-  }
-
-  if (submittedEmail) {
-    return (
-      <Card>
-        <div className="px-6 pt-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="size-3.5" />
-            Volver al inicio
-          </Link>
-        </div>
-        <CardHeader className="items-center text-center">
-          <span className="mb-2 flex size-12 items-center justify-center rounded-full bg-success/10 text-success">
-            <MailCheck className="size-6" aria-hidden />
-          </span>
-          <CardTitle>Revisa tu email</CardTitle>
-          <CardDescription>
-            Enviamos un enlace de confirmación a {submittedEmail}. Ábrelo para activar tu cuenta.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild variant="outline" className="w-full">
-            <Link href="/login">Volver a iniciar sesión</Link>
-          </Button>
-        </CardContent>
-      </Card>
-    );
   }
 
   return (

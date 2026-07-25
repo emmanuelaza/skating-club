@@ -42,7 +42,7 @@ export async function signInAction(formData: FormData): Promise<ActionResult> {
 /**
  * Registra un nuevo miembro. Pasa `tenant_id` y `role` en raw_user_meta_data
  * para que el trigger `handle_new_user()` cree el perfil con la sede correcta.
- * No inicia sesión: el flujo continúa con verificación por email.
+ * Inicia sesión automáticamente tras el registro y redirige al portal.
  */
 export async function signUpAction(formData: FormData): Promise<ActionResult> {
   const parsed = signUpSchema.safeParse({
@@ -85,7 +85,20 @@ export async function signUpAction(formData: FormData): Promise<ActionResult> {
   // Email de bienvenida (no bloquea el registro si falla).
   await sendWelcomeEmail({ email: parsed.data.email, full_name: parsed.data.fullName }, tenant);
 
-  return { ok: true, data: undefined };
+  // Iniciar sesión automáticamente para evitar la pantalla de verificación
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (signInError) {
+    return {
+      ok: false,
+      error: 'Cuenta creada, pero no se pudo iniciar sesión automáticamente. Por favor ve a iniciar sesión.',
+    };
+  }
+
+  redirect('/portal' as Route);
 }
 
 /**
