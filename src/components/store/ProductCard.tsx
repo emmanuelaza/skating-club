@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Heart, ShoppingCart, Star, Check } from 'lucide-react';
+import { Heart, ShoppingCart, Star, Check, Clock, Store } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { Product } from './products-data';
 import { useCart } from './CartProvider';
@@ -21,6 +21,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
 
   const handleAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (product.comingSoon) return;
     addItem({
       id: product.id,
       name: product.name,
@@ -34,6 +35,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (product.comingSoon) return;
     addItem({
       id: product.id,
       name: product.name,
@@ -41,7 +43,6 @@ export function ProductCard({ product, index }: ProductCardProps) {
       price: product.price,
       image: product.image,
     });
-    // Abre el carrito inmediatamente
     openCart();
   };
 
@@ -50,8 +51,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
     setLiked((l) => !l);
   };
 
-  const navigateToDetail = (e: React.MouseEvent) => {
-    // Redirige a la página individual del producto
+  const navigateToDetail = () => {
     router.push(`/tienda/producto/${product.id}`);
   };
 
@@ -70,12 +70,22 @@ export function ProductCard({ product, index }: ProductCardProps) {
           alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+          className={`object-contain p-4 transition-transform duration-500 group-hover:scale-105 ${product.comingSoon ? 'opacity-80' : ''}`}
           unoptimized={product.image.startsWith('http')}
         />
 
+        {/* Coming Soon overlay */}
+        {product.comingSoon && (
+          <div className="absolute inset-0 flex items-end justify-start p-3">
+            <span className="flex items-center gap-1.5 rounded-lg bg-[#8B5CF6] px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg">
+              <Clock className="size-3" />
+              Próximamente
+            </span>
+          </div>
+        )}
+
         {/* New badge */}
-        {product.isNew && (
+        {product.isNew && !product.comingSoon && (
           <span className="absolute left-3 top-3 rounded-md bg-[#8B5CF6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
             Nuevo
           </span>
@@ -105,52 +115,73 @@ export function ProductCard({ product, index }: ProductCardProps) {
           {product.name}
         </h3>
 
-        {/* Price */}
-        <p className="mt-0.5 font-display text-lg font-bold text-[#22D3EE]">
-          ${product.price.toLocaleString('es-CO')}
-        </p>
-
-        {/* Stars */}
-        <div className="flex items-center gap-1.5 mb-2">
-          <div className="flex gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`size-3 ${
-                  i < Math.floor(product.rating)
-                    ? 'fill-[#22D3EE] text-[#22D3EE]'
-                    : 'fill-[#222222] text-[#222222]'
-                }`}
-              />
-            ))}
-          </div>
-          <span className="text-[10px] text-[#888888]">({product.reviews})</span>
+        {/* Distribuido por Go On badge */}
+        <div className="flex items-center gap-1 mt-0.5">
+          <Store className="size-3 text-[#555555] shrink-0" />
+          <span className="text-[9px] text-[#555555] font-medium tracking-wide">Distribuido por Go On</span>
         </div>
 
-        {/* Actions - Modern Nike/Apple side-by-side design */}
-        <div className="mt-auto flex gap-2 pt-2 border-t border-[#222222]/40">
-          {/* Comprar ahora - Main CTA */}
-          <button
-            type="button"
-            onClick={handleBuyNow}
-            className="flex-1 rounded-lg border-0 bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] py-2 text-xs font-bold text-white transition-all duration-300 hover:from-[#7c4df2] hover:to-[#5457e5] active:scale-95"
-          >
-            Comprar ahora
-          </button>
+        {/* Price or Coming Soon */}
+        {product.comingSoon ? (
+          <p className="mt-1 text-xs font-semibold text-[#8B5CF6]">Disponibilidad próxima</p>
+        ) : (
+          <p className="mt-0.5 font-display text-lg font-bold text-[#22D3EE]">
+            ${product.price.toLocaleString('es-CO')}
+          </p>
+        )}
 
-          {/* Agregar al carrito - Compact Icon CTA */}
-          <button
-            type="button"
-            onClick={handleAdd}
-            aria-label="Agregar al carrito"
-            className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-all duration-300 ${
-              addedFeedback
-                ? 'border-[#22D3EE] bg-[#22D3EE]/10 text-[#22D3EE]'
-                : 'border-[#222222] bg-[#1A1A1A] text-[#888888] hover:border-[#8B5CF6] hover:text-[#8B5CF6] active:scale-95'
-            }`}
-          >
-            {addedFeedback ? <Check className="size-4" /> : <ShoppingCart className="size-4" />}
-          </button>
+        {/* Stars — only for products with reviews */}
+        {product.reviews > 0 && (
+          <div className="flex items-center gap-1.5 mb-2">
+            <div className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  className={`size-3 ${
+                    i < Math.floor(product.rating)
+                      ? 'fill-[#22D3EE] text-[#22D3EE]'
+                      : 'fill-[#222222] text-[#222222]'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-[10px] text-[#888888]">({product.reviews})</span>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="mt-auto flex gap-2 pt-2 border-t border-[#222222]/40">
+          {product.comingSoon ? (
+            <button
+              type="button"
+              disabled
+              className="flex-1 rounded-lg border border-[#333] bg-[#1A1A1A] py-2 text-xs font-semibold text-[#555555] cursor-not-allowed"
+            >
+              Próximamente
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                className="flex-1 rounded-lg border-0 bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] py-2 text-xs font-bold text-white transition-all duration-300 hover:from-[#7c4df2] hover:to-[#5457e5] active:scale-95"
+              >
+                Comprar ahora
+              </button>
+              <button
+                type="button"
+                onClick={handleAdd}
+                aria-label="Agregar al carrito"
+                className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-all duration-300 ${
+                  addedFeedback
+                    ? 'border-[#22D3EE] bg-[#22D3EE]/10 text-[#22D3EE]'
+                    : 'border-[#222222] bg-[#1A1A1A] text-[#888888] hover:border-[#8B5CF6] hover:text-[#8B5CF6] active:scale-95'
+                }`}
+              >
+                {addedFeedback ? <Check className="size-4" /> : <ShoppingCart className="size-4" />}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </motion.article>

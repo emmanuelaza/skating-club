@@ -1,12 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import {
-  LayoutGrid, Zap, Shield, Circle, Package, Shirt, Wrench, ChevronDown,
-} from 'lucide-react';
+import { LayoutGrid, Zap, HardHat, ChevronDown } from 'lucide-react';
 import { CATEGORIES } from './products-data';
 
-const ICONS = { LayoutGrid, Zap, Shield, Circle, Package, Shirt, Wrench } as const;
+const ICONS = { LayoutGrid, Zap, HardHat } as const;
 
 interface FilterBarProps {
   activeCategory: string;
