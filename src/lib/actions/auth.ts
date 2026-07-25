@@ -28,15 +28,20 @@ export async function signInAction(formData: FormData): Promise<ActionResult> {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  if (error) {
+  const { data: authData, error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error || !authData.user) {
     return { ok: false, error: 'Credenciales incorrectas' };
   }
 
-  const profile = await getProfile();
-  // `/dashboard` y `/portal` aún no son rutas tipadas (existen desde módulos
-  // posteriores); el cast satisface a typedRoutes sin perder el destino real.
-  redirect((profile ? homePathForRole(profile.role) : '/') as Route);
+  // Obtener el rol del perfil usando authData.user.id directamente
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('auth_user_id', authData.user.id)
+    .maybeSingle();
+
+  const destination = profile ? homePathForRole(profile.role) : '/portal';
+  redirect(destination as Route);
 }
 
 /**
@@ -86,19 +91,26 @@ export async function signUpAction(formData: FormData): Promise<ActionResult> {
   await sendWelcomeEmail({ email: parsed.data.email, full_name: parsed.data.fullName }, tenant);
 
   // Iniciar sesión automáticamente para evitar la pantalla de verificación
-  const { error: signInError } = await supabase.auth.signInWithPassword({
+  const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
     password: parsed.data.password,
   });
 
-  if (signInError) {
+  if (signInError || !signInData.user) {
     return {
       ok: false,
       error: 'Cuenta creada, pero no se pudo iniciar sesión automáticamente. Por favor ve a iniciar sesión.',
     };
   }
 
-  redirect('/portal' as Route);
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('auth_user_id', signInData.user.id)
+    .maybeSingle();
+
+  const destination = profile ? homePathForRole(profile.role) : '/portal';
+  redirect(destination as Route);
 }
 
 /**
