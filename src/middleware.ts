@@ -134,14 +134,14 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // /dashboard/** -> sesión + rol staff.
   if (pathname.startsWith('/dashboard')) {
-    if (!user) return redirectTo('/login');
-    if (!role || !isStaffRole(role)) return redirectTo('/portal');
+    if (!user || !role) return redirectTo('/login');
+    if (!isStaffRole(role)) return redirectTo('/portal');
     return next();
   }
 
   // /portal/** -> sesión + rol member.
   if (pathname.startsWith('/portal')) {
-    if (!user) return redirectTo('/login');
+    if (!user || !role) return redirectTo('/login');
     if (role !== 'member') return redirectTo('/dashboard');
     return next();
   }
