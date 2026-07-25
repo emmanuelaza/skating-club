@@ -91,14 +91,21 @@ export async function getTenantById(id: string): Promise<Tenant | null> {
 export async function getCurrentTenant(): Promise<Tenant | null> {
   const host = (await headers()).get('host');
   const subdomain = getSubdomainFromHost(host);
+  
+  console.log('[getCurrentTenant] Incoming Host:', host);
+  console.log('[getCurrentTenant] Extracted Subdomain:', subdomain);
+
   if (subdomain) {
     const t = await getTenant(subdomain);
+    console.log('[getCurrentTenant] Resolved via Subdomain:', t ? t.id : 'null');
     if (t) return t;
   }
 
   const tenantId = (await cookies()).get(TENANT_COOKIE)?.value;
+  console.log('[getCurrentTenant] Cookie tenant_id:', tenantId);
   if (tenantId) {
     const t = await getTenantById(tenantId);
+    console.log('[getCurrentTenant] Resolved via Cookie:', t ? t.id : 'null');
     if (t) return t;
   }
 
@@ -108,21 +115,25 @@ export async function getCurrentTenant(): Promise<Tenant | null> {
     const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
     const isVercel = hostname.endsWith('.vercel.app');
 
+    console.log('[getCurrentTenant] host checks - isLocalhost:', isLocalhost, 'isVercel:', isVercel);
+
     if (isLocalhost || isVercel) {
       const supabase = createAdminClient();
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('tenants')
         .select('*')
         .eq('is_active', true)
         .order('created_at', { ascending: true })
         .limit(1)
         .maybeSingle();
+      console.log('[getCurrentTenant] Fallback DB Query data:', data ? data.id : 'null', 'error:', error);
       if (data) {
         return data;
       }
     }
   }
 
+  console.log('[getCurrentTenant] Returning null');
   return null;
 }
 
