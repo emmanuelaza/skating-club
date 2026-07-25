@@ -30,17 +30,23 @@ export async function signInAction(formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
   const { data: authData, error } = await supabase.auth.signInWithPassword(parsed.data);
   if (error || !authData.user) {
+    console.log('[SIGNIN_ACTION] Auth failed:', error?.message ?? 'no user');
     return { ok: false, error: 'Credenciales incorrectas' };
   }
 
+  console.log('[SIGNIN_ACTION] Auth success for user:', authData.user.id);
+
   // Obtener el rol del perfil usando authData.user.id directamente
-  const { data: profile } = await supabase
+  const { data: profile, error: profileErr } = await supabase
     .from('profiles')
     .select('role')
     .eq('auth_user_id', authData.user.id)
     .maybeSingle();
 
+  console.log('[SIGNIN_ACTION] Profile fetched role:', profile?.role ?? 'null', 'Error:', profileErr?.message ?? 'none');
+
   const destination = profile ? homePathForRole(profile.role) : '/portal';
+  console.log('[SIGNIN_ACTION] Directing to destination:', destination);
   redirect(destination as Route);
 }
 

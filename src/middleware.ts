@@ -110,13 +110,16 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   let role: UserRole | null = null;
   if (needsRole) {
-    const { data: profile } = await supabase
+    const { data: profile, error: profileErr } = await supabase
       .from('profiles')
       .select('role')
       .eq('auth_user_id', user.id)
       .maybeSingle<{ role: UserRole }>();
     role = profile?.role ?? null;
+    console.log(`[MIDDLEWARE] User: ${user.id} | Role: ${role} | ProfileErr:`, profileErr?.message ?? 'none');
   }
+
+  console.log(`[MIDDLEWARE] Path: ${pathname} | User: ${user ? 'active' : 'null'} | Role: ${role}`);
 
   // Construye la respuesta final propagando cookies de sesión y x-tenant-id.
   const finalize = (response: NextResponse): NextResponse => {
@@ -125,8 +128,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     }
     return response;
   };
-  const redirectTo = (path: string): NextResponse =>
-    finalize(NextResponse.redirect(new URL(path, request.url)));
+  const redirectTo = (path: string): NextResponse => {
+    console.log(`[MIDDLEWARE] Redirecting ${pathname} -> ${path}`);
+    return finalize(NextResponse.redirect(new URL(path, request.url)));
+  };
   const next = (): NextResponse =>
     finalize(NextResponse.next({ request: { headers: requestHeaders } }));
 
@@ -134,14 +139,20 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // /dashboard/** -> sesión + rol staff.
   if (pathname.startsWith('/dashboard')) {
-    if (!user || !role) return redirectTo('/login');
+    if (!user || !role) {
+      console.log(`[MIDDLEWARE] /dashboard blocked (user=${Boolean(user)}, role=${role}) -> redirecting /login`);
+      return redirectTo('/login');
+    }
     if (!isStaffRole(role)) return redirectTo('/portal');
     return next();
   }
 
   // /portal/** -> sesión + rol member.
   if (pathname.startsWith('/portal')) {
-    if (!user || !role) return redirectTo('/login');
+    if (!user || !role) {
+      console.log(`[MIDDLEWARE] /portal blocked (user=${Boolean(user)}, role=${role}) -> redirecting /login`);
+      return redirectTo('/login');
+    }
     if (role !== 'member') return redirectTo('/dashboard');
     return next();
   }
