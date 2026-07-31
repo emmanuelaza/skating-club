@@ -26,7 +26,8 @@ function isPublicPath(pathname: string): boolean {
  *  1. Refresca la sesión de Supabase en cada request.
  *  2. Resuelve la sede por host y la expone en la cabecera `x-tenant-id`.
  *  3. Protege /dashboard/** (staff) y /portal/** (member) por rol.
- *  4. Redirige `/` y las rutas de auth al destino correcto según el rol.
+ *  4. Redirige las rutas de auth al destino correcto según el rol. El sitio
+ *     público (incluida `/`) queda accesible con o sin sesión.
  */
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
@@ -103,8 +104,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // Rol del usuario (solo si hay sesión y la ruta lo necesita).
   const needsRole =
     user !== null &&
-    (pathname === '/' ||
-      AUTH_ROUTES.includes(pathname) ||
+    (AUTH_ROUTES.includes(pathname) ||
       pathname.startsWith('/dashboard') ||
       pathname.startsWith('/portal'));
 
@@ -169,10 +169,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return redirectTo(homePathForRole(role));
   }
 
-  // Raíz: usuario autenticado -> su home; anónimo -> landing pública.
-  if (pathname === '/' && user && role) {
-    return redirectTo(homePathForRole(role));
-  }
+  // La raíz y el resto del sitio público quedan accesibles también con sesión
+  // activa: el portal enlaza de vuelta a la landing y un redirect aquí dejaría
+  // al miembro encerrado. Tras iniciar sesión, signInAction / signUpAction y el
+  // callback OAuth ya llevan a `homePathForRole`.
 
   // Resto: rutas públicas u otras pasan con la sesión refrescada.
   if (!isPublicPath(pathname) && !user) {

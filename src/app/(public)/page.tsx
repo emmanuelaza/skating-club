@@ -4,7 +4,6 @@ import Link from 'next/link';
 import type { Route } from 'next';
 import { CreditCard, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Section, SectionHeading, PUBLIC_CONTAINER, CARD_HOVER } from '@/components/public/Section';
 import { PricingPlans, type PublicPlan } from '@/components/public/PricingPlans';
 import { FAQAccordion } from '@/components/public/FAQAccordion';
@@ -21,6 +20,7 @@ import {
   ParticleFieldLazy,
 } from '@/components/3d/Scene3D';
 import { cn } from '@/lib/utils';
+import { CLUB_CATEGORIES, CLUB_LOCATION } from '@/lib/club-data';
 
 export const metadata: Metadata = {
   title: 'Grandes Paisas · El arte de rodar con precisión',
@@ -60,44 +60,6 @@ const OFFERING_STATS = [
   { value: '4', label: 'semanas para notar tu primera mejora real' },
   { value: '+200', label: 'patinadores que ya transformaron su nivel' },
   { value: '98%', label: 'de satisfacción entre nuestros miembros' },
-];
-
-const CLASS_TYPES = [
-  {
-    name: 'Iniciación Infantil',
-    level: 'Principiante',
-    duration: 60,
-    desc: 'Tus primeros deslizamientos en pista de manera segura y divertida. Ideal para niños que comienzan.',
-    image: '/images/clase_iniciacion_infantil.jpg',
-  },
-  {
-    name: 'Patinaje Infantil',
-    level: 'Principiante',
-    duration: 60,
-    desc: 'Juegos y técnicas dinámicas en movimiento para desarrollar velocidad y destreza en la pista.',
-    image: '/images/clase_patinaje_infantil.jpg',
-  },
-  {
-    name: 'Slalom',
-    level: 'Avanzado',
-    duration: 60,
-    desc: 'Técnica, giros rápidos y precisión extrema entre conos a alta velocidad.',
-    image: '/images/clase_slalom.jpg',
-  },
-  {
-    name: 'Patinaje Artístico',
-    level: 'Principiante',
-    duration: 75,
-    desc: 'Figuras, coreografías y expresión corporal sobre ruedas. Desarrolla gracia, equilibrio y elegancia.',
-    image: '/images/clase_artistico.jpg',
-  },
-  {
-    name: 'Freestyle',
-    level: 'Intermedio',
-    duration: 60,
-    desc: 'Trucos, saltos urbanos, saltos de rampa y estilo libre sobre patines inline.',
-    image: '/images/clase_freestyle.jpg',
-  },
 ];
 
 const PLANS: PublicPlan[] = [
@@ -159,9 +121,9 @@ const FAQS = [
   },
   {
     id: 'f2',
-    question: '¿Qué incluye cada membresía?',
+    question: '¿Cuánto cuesta la matrícula?',
     answer:
-      'Cada plan define el acceso a pista libre y la cantidad de clases. Puedes comparar Básico, Pro y Elite en la sección de planes.',
+      'La matrícula es un pago único de $70.000 e incluye la camiseta oficial del club. Si se inscriben familiares, cada mensualidad tiene $15.000 de descuento.',
   },
   {
     id: 'f3',
@@ -184,8 +146,13 @@ const FAQS = [
   {
     id: 'f6',
     question: '¿Dónde están ubicados?',
+    answer: `Entrenamos en la ${CLUB_LOCATION.venue}, ${CLUB_LOCATION.unit}. ${CLUB_LOCATION.altNote}`,
+  },
+  {
+    id: 'f7',
+    question: '¿Puedo probar antes de inscribirme?',
     answer:
-      'Estamos en Bogotá, Colombia. Escríbenos desde la página de contacto para conocer la dirección y los horarios.',
+      'Sí. Ofrecemos una semana de prueba gratis en cualquier categoría. Escríbenos desde la página de contacto para agendar tu cortesía.',
   },
 ];
 
@@ -280,23 +247,31 @@ export default function PublicHomePage() {
             'relative z-[10] w-full',
             // MOBILE: alineado arriba en espacio negativo (padding top compacto 76px)
             'flex flex-col items-start px-5 pt-[76px]',
-            // DESKTOP: centrado como antes
-            'md:mx-auto md:flex md:max-w-4xl md:flex-col md:items-center md:px-6 md:pb-16 md:pt-32 md:text-center',
-            'lg:py-0',
+            // DESKTOP: bloque centrado con padding simétrico (el section usa items-center)
+            'md:mx-auto md:flex md:max-w-4xl md:flex-col md:items-center md:px-6 md:py-28 md:text-center',
           )}
         >
-          {/* Eyebrow */}
+          {/* Eyebrow — etiqueta pegada al título, separación corta */}
           <span
-            className="mb-2 block uppercase text-white/70 md:mb-4 md:text-muted-foreground font-semibold"
-            style={{ fontSize: '9.5px', letterSpacing: '0.22em' }}
+            className={cn(
+              'block font-semibold uppercase text-white/70 md:text-muted-foreground',
+              'text-[9.5px] tracking-[0.22em] md:text-xs',
+              'mb-2 md:mb-6',
+            )}
           >
             Club de patinaje profesional · Bogotá
           </span>
 
           {/* Título */}
           <h1
-            className="mb-2 font-display font-black leading-[1.12] tracking-tight text-white md:mb-4 md:text-foreground"
-            style={{ fontSize: 'clamp(1.75rem, 5.5vw, 5.5rem)', maxWidth: '240px' }}
+            className={cn(
+              'font-display font-black tracking-tight text-white md:text-foreground',
+              'text-[clamp(1.75rem,5.5vw,5.5rem)] leading-[1.12] md:leading-[1.05]',
+              // En mobile el ancho corto mantiene el texto sobre el área limpia;
+              // en desktop el título usa todo el contenedor centrado.
+              'max-w-[240px] md:max-w-none',
+              'mb-2 md:mb-7',
+            )}
           >
             {/* Mobile: texto plano sobre el área limpia superior izquierda */}
             <span className="md:hidden">El arte de rodar con precisión</span>
@@ -308,8 +283,12 @@ export default function PublicHomePage() {
 
           {/* Subtítulo */}
           <p
-            className="mb-5 leading-relaxed text-white/80 md:mb-8 md:text-muted-foreground text-xs sm:text-sm"
-            style={{ maxWidth: '230px' }}
+            className={cn(
+              'leading-relaxed text-white/80 md:text-muted-foreground',
+              'text-xs sm:text-sm md:text-lg',
+              'max-w-[230px] md:max-w-[34rem]',
+              'mb-5 md:mb-11',
+            )}
           >
             Clases, membresías y comunidad para patinadores de todos los niveles.
           </p>
@@ -338,7 +317,7 @@ export default function PublicHomePage() {
           </div>
 
           {/* Social proof — solo desktop */}
-          <div className="mt-10 hidden flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground md:flex">
+          <div className="mt-14 hidden flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground md:flex">
             <span>200+ miembros</span>
             <span className="text-primary">·</span>
             <span>15+ clases semanales</span>
@@ -438,13 +417,13 @@ export default function PublicHomePage() {
         <div className={PUBLIC_CONTAINER}>
           <FadeIn>
             <SectionHeading
-              title="Nuestras clases"
-              subtitle="Encuentra la disciplina perfecta, desde tus primeros pasos hasta competencias."
-              highlight={['clases']}
+              title="Nuestras categorías"
+              subtitle="Organizadas por etapa de formación deportiva, desde los primeros pasos hasta el alto rendimiento."
+              highlight={['categorías']}
             />
           </FadeIn>
         </div>
-        <InteractiveClasses classTypes={CLASS_TYPES} />
+        <InteractiveClasses categories={CLUB_CATEGORIES} />
       </section>
 
       {/* ═══════════════════════════════════════════ LOGROS Y RESULTADOS */}

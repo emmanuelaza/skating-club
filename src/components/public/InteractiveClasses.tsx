@@ -1,20 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronRight, Clock } from 'lucide-react';
+import Link from 'next/link';
+import type { Route } from 'next';
+import { ArrowRight, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useIsDesktop } from '@/hooks/useMediaQuery';
+import { priceLabel, type ClubCategory } from '@/lib/club-data';
 
-export interface ClassType {
-  name: string;
-  level: string;
-  duration: number;
-  desc: string;
-  image: string;
-}
-
-export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) {
+/**
+ * Explorador de categorías del home. En desktop es una lista con preview
+ * animado; en mobile un acordeón. Cada categoría enlaza a su detalle.
+ */
+export function InteractiveClasses({ categories }: { categories: ClubCategory[] }) {
   const isDesktop = useIsDesktop();
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isHovering, setIsHovering] = React.useState(false);
@@ -24,38 +23,43 @@ export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) 
     if (isHovering || !isDesktop) return;
 
     const interval = setInterval(() => {
-      setActiveIndex((current) => (current + 1) % classTypes.length);
+      setActiveIndex((current) => (current + 1) % categories.length);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isHovering, isDesktop, classTypes.length]);
+  }, [isHovering, isDesktop, categories.length]);
 
   if (!isDesktop) {
     return (
       <div className="flex flex-col gap-4 px-6 pb-8">
-        {classTypes.map((c, idx) => {
+        {categories.map((c, idx) => {
           const isActive = activeIndex === idx;
           return (
             <div
-              key={c.name}
+              key={c.slug}
               className="overflow-hidden rounded-lg border border-border bg-card"
             >
               <button
                 type="button"
-                className="flex w-full items-center justify-between p-4 text-left"
+                className="flex w-full items-center justify-between gap-3 p-4 text-left"
                 onClick={() => setActiveIndex(isActive ? -1 : idx)}
               >
-                <span
-                  className={cn(
-                    'font-display text-lg font-bold transition-colors',
-                    isActive ? 'text-primary' : 'text-foreground'
-                  )}
-                >
-                  {c.name}
+                <span className="min-w-0">
+                  <span
+                    className={cn(
+                      'block font-display text-lg font-bold leading-tight transition-colors',
+                      isActive ? 'text-primary' : 'text-foreground'
+                    )}
+                  >
+                    {c.name}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {priceLabel(c)}
+                  </span>
                 </span>
                 <ChevronRight
                   className={cn(
-                    'size-5 text-muted-foreground transition-transform',
+                    'size-5 shrink-0 text-muted-foreground transition-transform',
                     isActive && 'rotate-90 text-primary'
                   )}
                 />
@@ -73,18 +77,19 @@ export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) 
                         className="mb-4 h-48 w-full rounded-md bg-cover bg-center"
                         style={{ backgroundImage: `url(${c.image})` }}
                       />
-                      <div className="mb-3 flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="rounded-md bg-primary/10 px-2 py-1 font-medium text-primary">
-                          {c.level}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="size-3" />
-                          {c.duration} min
-                        </span>
-                      </div>
+                      <span className="mb-3 inline-block rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                        {c.stage}
+                      </span>
                       <p className="text-sm leading-relaxed text-muted-foreground">
-                        {c.desc}
+                        {c.shortDesc}
                       </p>
+                      <Link
+                        href={`/clases/${c.slug}` as Route}
+                        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
+                      >
+                        Ver horarios y planes
+                        <ArrowRight className="size-4" aria-hidden />
+                      </Link>
                     </div>
                   </motion.div>
                 )}
@@ -96,8 +101,8 @@ export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) 
     );
   }
 
-  const activeClass = classTypes[activeIndex];
-  if (!activeClass) return null;
+  const activeCategory = categories[activeIndex];
+  if (!activeCategory) return null;
 
   return (
     <div className="mx-auto flex max-w-6xl overflow-hidden px-6 pb-8">
@@ -108,11 +113,12 @@ export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) 
         onMouseLeave={() => setIsHovering(false)}
       >
         <div className="flex flex-col gap-2 py-4">
-          {classTypes.map((c, idx) => {
+          {categories.map((c, idx) => {
             const isActive = activeIndex === idx;
             return (
-              <div
-                key={c.name}
+              <Link
+                key={c.slug}
+                href={`/clases/${c.slug}` as Route}
                 className="group relative flex cursor-pointer items-center py-4 pr-4 transition-all"
                 onMouseEnter={() => setActiveIndex(idx)}
               >
@@ -123,32 +129,44 @@ export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) 
                     isActive ? 'bg-primary' : 'bg-transparent'
                   )}
                 />
-                
+
                 <div className="flex w-full items-center pl-6">
                   <span
                     className={cn(
                       'mr-4 font-display text-sm font-bold transition-colors',
-                      isActive ? 'text-primary animate-pulse' : 'text-muted-foreground group-hover:text-foreground'
+                      isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
                     )}
                   >
                     {(idx + 1).toString().padStart(2, '0')}
                   </span>
-                  <span
-                    className={cn(
-                      'flex-grow font-display text-lg font-bold transition-colors',
-                      isActive ? 'text-white' : 'text-muted-foreground group-hover:text-foreground'
-                    )}
-                  >
-                    {c.name}
+                  <span className="min-w-0 flex-grow">
+                    <span
+                      className={cn(
+                        'block font-display text-lg font-bold leading-tight transition-colors',
+                        isActive ? 'text-white' : 'text-muted-foreground group-hover:text-foreground'
+                      )}
+                    >
+                      {c.name}
+                    </span>
+                    <span
+                      className={cn(
+                        'mt-0.5 block text-xs transition-colors',
+                        isActive ? 'text-primary' : 'text-muted-foreground/70'
+                      )}
+                    >
+                      {priceLabel(c)}
+                    </span>
                   </span>
                   <ChevronRight
                     className={cn(
-                      'size-5 transition-transform',
-                      isActive ? 'translate-x-1 opacity-100 text-primary' : 'opacity-0 text-muted-foreground group-hover:opacity-50'
+                      'size-5 shrink-0 transition-transform',
+                      isActive
+                        ? 'translate-x-1 opacity-100 text-primary'
+                        : 'opacity-0 text-muted-foreground group-hover:opacity-50'
                     )}
                   />
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -159,7 +177,7 @@ export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) 
         <div className="relative h-[500px] w-full overflow-hidden rounded-2xl bg-card">
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeClass.name}
+              key={activeCategory.slug}
               initial={{ y: '100%', opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '-100%', opacity: 0 }}
@@ -168,24 +186,26 @@ export function InteractiveClasses({ classTypes }: { classTypes: ClassType[] }) 
             >
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${activeClass.image})` }}
+                style={{ backgroundImage: `url(${activeCategory.image})` }}
               />
               {/* Overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+
               <div className="absolute bottom-0 left-0 w-full p-8">
                 <div className="mb-3 flex items-center gap-3 text-xs text-white">
                   <span className="rounded-md bg-primary/20 px-2 py-1 font-medium text-primary backdrop-blur-sm">
-                    {activeClass.level}
+                    {activeCategory.stage}
                   </span>
-                  <span className="flex items-center gap-1 opacity-80">
-                    <Clock className="size-3" />
-                    {activeClass.duration} min
-                  </span>
+                  <span className="font-medium opacity-90">{priceLabel(activeCategory)}</span>
                 </div>
-                <p className="line-clamp-2 max-w-xl text-base text-gray-200">
-                  {activeClass.desc}
-                </p>
+                <p className="max-w-xl text-base text-gray-200">{activeCategory.shortDesc}</p>
+                <Link
+                  href={`/clases/${activeCategory.slug}` as Route}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-white"
+                >
+                  Ver horarios y planes
+                  <ArrowRight className="size-4" aria-hidden />
+                </Link>
               </div>
             </motion.div>
           </AnimatePresence>

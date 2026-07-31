@@ -4,6 +4,7 @@ import { Instagram, Facebook, Music2, Mail, Phone, MapPin } from 'lucide-react';
 import { PUBLIC_CONTAINER } from './Section';
 import { cn } from '@/lib/utils';
 import { BrandLogo } from '@/components/ui/BrandLogo';
+import { CLUB_CATEGORIES, CLUB_LOCATION } from '@/lib/club-data';
 
 const CLUB_LINKS: { label: string; href: Route }[] = [
   { label: 'Inicio', href: '/' as Route },
@@ -11,8 +12,6 @@ const CLUB_LINKS: { label: string; href: Route }[] = [
   { label: 'Clases', href: '/clases' as Route },
   { label: 'Blog', href: '/blog' as Route },
 ];
-
-const PLAN_LINKS = ['Básico', 'Pro', 'Elite'];
 
 const SOCIAL = [
   { label: 'Instagram', icon: Instagram, href: 'https://instagram.com' },
@@ -64,15 +63,15 @@ export function Footer({ clubName = 'Grandes Paisas' }: { clubName?: string }) {
         </div>
 
         <div>
-          <h3 className="mb-4 font-display text-sm font-semibold text-foreground">Membresías</h3>
+          <h3 className="mb-4 font-display text-sm font-semibold text-foreground">Categorías</h3>
           <ul className="space-y-2.5">
-            {PLAN_LINKS.map((plan) => (
-              <li key={plan}>
+            {CLUB_CATEGORIES.map((category) => (
+              <li key={category.slug}>
                 <Link
-                  href={'/planes' as Route}
+                  href={`/clases/${category.slug}` as Route}
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  {plan}
+                  {category.name}
                 </Link>
               </li>
             ))}
@@ -97,8 +96,13 @@ export function Footer({ clubName = 'Grandes Paisas' }: { clubName?: string }) {
             </li>
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
-              Bogotá, Colombia
+              <span>
+                {CLUB_LOCATION.venue}
+                <br />
+                {CLUB_LOCATION.unit}
+              </span>
             </li>
+            <li className="pt-1 text-xs leading-relaxed">{CLUB_LOCATION.altNote}</li>
           </ul>
         </div>
       </div>
