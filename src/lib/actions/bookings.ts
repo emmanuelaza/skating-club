@@ -26,12 +26,12 @@ export async function createBookingAction(formData: FormData): Promise<ActionRes
   const supabase = await createClient();
   const { data: cls, error: classError } = await supabase
     .from('classes')
-    .select('id, capacity, status, starts_at, ends_at, location, class_type_id, instructor_id')
+    .select('id, capacity, status, scheduled_at, duration_minutes, room, class_type_id, instructor_id')
     .eq('id', classId.data)
     .maybeSingle();
   if (classError) return { ok: false, error: 'No se pudo cargar la clase.' };
   if (!cls) return { ok: false, error: 'Clase no encontrada.' };
-  if (cls.status === 'canceled') return { ok: false, error: 'La clase fue cancelada.' };
+  if (cls.status === 'cancelled') return { ok: false, error: 'La clase fue cancelada.' };
 
   const { data: existing } = await supabase
     .from('bookings')
@@ -39,7 +39,7 @@ export async function createBookingAction(formData: FormData): Promise<ActionRes
     .eq('class_id', cls.id)
     .eq('profile_id', profile.id)
     .maybeSingle();
-  if (existing && existing.status !== 'canceled') {
+  if (existing && existing.status !== 'cancelled') {
     return { ok: false, error: 'Ya tienes una reserva para esta clase.' };
   }
 
@@ -62,7 +62,7 @@ export async function createBookingAction(formData: FormData): Promise<ActionRes
   if (error) return { ok: false, error: 'No se pudo crear la reserva.' };
 
   // Email de confirmación (solo cuando queda confirmada; no bloquea la reserva).
-  if (status === 'confirmed') {
+  if (status === 'confirmed' && profile.email) {
     const tenant = await getCurrentTenant();
     if (tenant) {
       const [{ data: classType }, instructorResult] = await Promise.all([
@@ -71,17 +71,14 @@ export async function createBookingAction(formData: FormData): Promise<ActionRes
           ? supabase.from('profiles').select('full_name').eq('id', cls.instructor_id).maybeSingle()
           : Promise.resolve({ data: null }),
       ]);
-      const durationMinutes = Math.round(
-        (new Date(cls.ends_at).getTime() - new Date(cls.starts_at).getTime()) / 60_000,
-      );
       await sendBookingConfirmation(
         profile.email,
         {
           classType: classType?.name ?? 'Clase',
           instructor: instructorResult.data?.full_name ?? null,
-          location: cls.location,
-          startsAt: cls.starts_at,
-          durationMinutes,
+          location: cls.room,
+          startsAt: cls.scheduled_at,
+          durationMinutes: cls.duration_minutes,
         },
         tenant,
       );
@@ -115,11 +112,11 @@ export async function cancelBookingAction(formData: FormData): Promise<ActionRes
 
   const { data: cls } = await supabase
     .from('classes')
-    .select('starts_at, class_type_id')
+    .select('scheduled_at, class_type_id')
     .eq('id', booking.class_id)
     .maybeSingle();
   if (cls) {
-    const hoursUntil = (new Date(cls.starts_at).getTime() - Date.now()) / 3_600_000;
+    const hoursUntil = (new Date(cls.scheduled_at).getTime() - Date.now()) / 3_600_000;
     if (hoursUntil < CANCEL_WINDOW_HOURS) {
       return {
         ok: false,
@@ -128,11 +125,14 @@ export async function cancelBookingAction(formData: FormData): Promise<ActionRes
     }
   }
 
-  const { error } = await supabase.from('bookings').update({ status: 'canceled' }).eq('id', booking.id);
+  const { error } = await supabase
+    .from('bookings')
+    .update({ status: 'cancelled', cancelled_at: new Date().toISOString() })
+    .eq('id', booking.id);
   if (error) return { ok: false, error: 'No se pudo cancelar la reserva.' };
 
   // Email de cancelación (no bloquea la operación).
-  if (cls) {
+  if (cls && profile.email) {
     const tenant = await getCurrentTenant();
     if (tenant) {
       const { data: classType } = await supabase
@@ -142,7 +142,7 @@ export async function cancelBookingAction(formData: FormData): Promise<ActionRes
         .maybeSingle();
       await sendBookingCancellation(
         profile.email,
-        { classType: classType?.name ?? 'Clase', startsAt: cls.starts_at },
+        { classType: classType?.name ?? 'Clase', startsAt: cls.scheduled_at },
         tenant,
       );
     }
@@ -154,7 +154,7 @@ export async function cancelBookingAction(formData: FormData): Promise<ActionRes
   return { ok: true, data: undefined };
 }
 
-/** Congela la membresía activa (status -> paused, registra frozen_at). */
+/** Congela la membresía activa (status -> frozen, registra frozen_at). */
 export async function freezeSubscriptionAction(formData: FormData): Promise<ActionResult> {
   const profile = await requireRole(PORTAL_ROLES);
 
@@ -178,7 +178,7 @@ export async function freezeSubscriptionAction(formData: FormData): Promise<Acti
 
   const { error } = await supabase
     .from('subscriptions')
-    .update({ status: 'paused', frozen_at: new Date().toISOString() })
+    .update({ status: 'frozen', frozen_at: new Date().toISOString() })
     .eq('id', subscription.id);
   if (error) return { ok: false, error: 'No se pudo congelar la membresía.' };
 

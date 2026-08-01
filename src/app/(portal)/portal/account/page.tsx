@@ -25,18 +25,28 @@ export const dynamic = 'force-dynamic';
 
 const ORDER_BADGE: Record<OrderStatus, { label: string; variant: 'success' | 'warning' | 'destructive' | 'secondary' }> = {
   pending: { label: 'Pendiente', variant: 'secondary' },
+  payment_pending: { label: 'Pago pendiente', variant: 'warning' },
   paid: { label: 'Pagado', variant: 'success' },
-  fulfilled: { label: 'Entregado', variant: 'success' },
-  canceled: { label: 'Cancelado', variant: 'destructive' },
+  preparing: { label: 'En preparación', variant: 'secondary' },
+  shipped: { label: 'Enviado', variant: 'secondary' },
+  delivered: { label: 'Entregado', variant: 'success' },
+  cancelled: { label: 'Cancelado', variant: 'destructive' },
   refunded: { label: 'Reembolsado', variant: 'warning' },
 };
 
 const LOYALTY_LABELS: Record<LoyaltyType, string> = {
-  earned: 'Ganados',
+  earned_booking: 'Ganados · clase',
+  earned_purchase: 'Ganados · compra',
+  earned_referral: 'Ganados · referido',
+  earned_manual: 'Ajuste del club',
   redeemed: 'Canjeados',
   expired: 'Expirados',
-  adjusted: 'Ajuste',
 };
+
+/** Referencia corta y legible del pedido (no hay columna `reference` en la DB). */
+function orderRef(id: string): string {
+  return `#${id.slice(0, 8).toUpperCase()}`;
+}
 
 export default async function AccountPage() {
   const profile = await getProfile();
@@ -46,13 +56,13 @@ export default async function AccountPage() {
   const [ordersResult, loyaltyResult] = await Promise.all([
     supabase
       .from('orders')
-      .select('id, reference, status, total_cop, created_at')
+      .select('id, status, total_cop, created_at')
       .eq('profile_id', profile.id)
       .order('created_at', { ascending: false })
       .limit(50),
     supabase
       .from('loyalty_points')
-      .select('id, type, points, reason, created_at')
+      .select('id, type, points, description, created_at')
       .eq('profile_id', profile.id)
       .order('created_at', { ascending: false })
       .limit(50),
@@ -77,7 +87,7 @@ export default async function AccountPage() {
             defaults={{
               fullName: profile.full_name ?? '',
               phone: profile.phone ?? '',
-              dateOfBirth: profile.date_of_birth ? profile.date_of_birth.slice(0, 10) : '',
+              dateOfBirth: profile.birth_date ? profile.birth_date.slice(0, 10) : '',
             }}
           />
         </CardContent>
@@ -113,7 +123,7 @@ export default async function AccountPage() {
                 {orders.map((order) => (
                   <TableRow key={order.id}>
                     <TableCell>
-                      <p className="font-mono text-xs text-foreground">{order.reference}</p>
+                      <p className="font-mono text-xs text-foreground">{orderRef(order.id)}</p>
                       <p className="text-xs text-muted-foreground">{formatDate(order.created_at)}</p>
                     </TableCell>
                     <TableCell>

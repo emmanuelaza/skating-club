@@ -34,15 +34,15 @@ export function KPICard({
     <FadeIn delay={index * 0.08}>
       <SpotlightCard className="h-full rounded-xl">
         <Card className="h-full border-none">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{label}</span>
-              <span className="flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-2">
+              <span className="truncate text-sm text-muted-foreground">{label}</span>
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Icon className="size-5" aria-hidden />
               </span>
             </div>
-            <div className="mt-3 flex items-end justify-between gap-2">
-              <span className="font-display text-3xl font-semibold text-foreground">
+            <div className="mt-3 flex flex-wrap items-end justify-between gap-2">
+              <span className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
                 {countTo !== undefined ? (
                   <CounterAnimation target={countTo} format={countFormat} duration={1.2} />
                 ) : (

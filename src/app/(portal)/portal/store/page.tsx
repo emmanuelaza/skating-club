@@ -23,7 +23,7 @@ export default async function PortalStorePage({
 
   let productsQuery = supabase
     .from('products')
-    .select('id, name, images, category')
+    .select('id, name, image_urls, category')
     .eq('is_active', true)
     .order('created_at', { ascending: false });
   if (category) productsQuery = productsQuery.eq('category', category);
@@ -95,7 +95,7 @@ export default async function PortalStorePage({
       ) : (
         <div className="grid grid-cols-2 gap-3">
           {products.map((product) => {
-            const image = firstImage(product.images);
+            const image = firstImage(product.image_urls);
             const price = fromPrice.get(product.id);
             return (
               <Link key={product.id} href={`/portal/store/${product.id}` as Route}>

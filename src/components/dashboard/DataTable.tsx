@@ -41,8 +41,10 @@ export function DataTable<T>({
   emptyMessage = 'Sin resultados.',
 }: DataTableProps<T>) {
   return (
+    // El wrapper interno de <Table> ya scrollea en X; el min-w evita que las
+    // columnas colapsen en pantallas angostas.
     <div className="rounded-lg border border-border bg-card">
-      <Table>
+      <Table className="min-w-[640px]">
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             {columns.map((column) => (

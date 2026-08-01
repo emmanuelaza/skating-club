@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireStaff } from '@/lib/auth';
 import { uuidSchema } from '@/lib/validations/common';
 import { planFormSchema, updatePlanSchema } from '@/lib/validations/memberships';
+import { intervalToDurationDays } from '@/lib/memberships';
 import type { ActionResult } from '@/types';
 
 function parseBenefits(raw: string): string[] {
@@ -34,9 +35,8 @@ export async function createPlanAction(formData: FormData): Promise<ActionResult
     name: parsed.data.name,
     description: parsed.data.description || null,
     price_cop: parsed.data.priceCop,
-    currency: 'COP',
-    interval: parsed.data.interval,
-    features: parseBenefits(parsed.data.benefits ?? ''),
+    duration_days: intervalToDurationDays(parsed.data.interval),
+    benefits: parseBenefits(parsed.data.benefits ?? ''),
   });
 
   if (error) {
@@ -69,8 +69,8 @@ export async function updatePlanAction(formData: FormData): Promise<ActionResult
       name: parsed.data.name,
       description: parsed.data.description || null,
       price_cop: parsed.data.priceCop,
-      interval: parsed.data.interval,
-      features: parseBenefits(parsed.data.benefits ?? ''),
+      duration_days: intervalToDurationDays(parsed.data.interval),
+      benefits: parseBenefits(parsed.data.benefits ?? ''),
     })
     .eq('id', parsed.data.id);
 

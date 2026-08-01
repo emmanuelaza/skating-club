@@ -21,7 +21,7 @@ export default async function ProductDetailPage({
 
   const { data: product, error } = await supabase
     .from('products')
-    .select('id, name, description, images, is_active')
+    .select('id, name, description, image_urls, is_active')
     .eq('id', productId)
     .maybeSingle();
   if (error) throw new Error(error.message);
@@ -29,13 +29,21 @@ export default async function ProductDetailPage({
 
   const { data: variantsData } = await supabase
     .from('product_variants')
-    .select('id, name, sku, price_cop, compare_price_cop, stock')
+    .select('id, sku, size, color, price_cop, compare_price, stock')
     .eq('product_id', product.id)
     .eq('is_active', true)
-    .order('name', { ascending: true });
+    .order('sku', { ascending: true });
 
-  const variants: VariantOption[] = variantsData ?? [];
-  const images = toImages(product.images);
+  // La variante se nombra con talla/color (columnas reales); el SKU es respaldo.
+  const variants: VariantOption[] = (variantsData ?? []).map((variant) => ({
+    id: variant.id,
+    name: [variant.size, variant.color].filter(Boolean).join(' · ') || variant.sku,
+    sku: variant.sku,
+    price_cop: variant.price_cop,
+    compare_price_cop: variant.compare_price,
+    stock: variant.stock,
+  }));
+  const images = toImages(product.image_urls);
 
   return (
     <div className="space-y-5">

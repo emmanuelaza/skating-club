@@ -23,7 +23,7 @@ const STATUS_BADGE: Record<BookingStatus, { label: string; variant: 'success' | 
   confirmed: { label: 'Confirmada', variant: 'success' },
   waitlisted: { label: 'En lista', variant: 'warning' },
   attended: { label: 'Asistió', variant: 'secondary' },
-  canceled: { label: 'Cancelada', variant: 'destructive' },
+  cancelled: { label: 'Cancelada', variant: 'destructive' },
   no_show: { label: 'No asistió', variant: 'secondary' },
 };
 
@@ -80,7 +80,7 @@ export default async function MyBookingsPage() {
   if (classIds.length > 0) {
     const { data: classes } = await supabase
       .from('classes')
-      .select('id, starts_at, class_type_id, instructor_id')
+      .select('id, scheduled_at, class_type_id, instructor_id')
       .in('id', classIds);
     const typeIds = Array.from(new Set((classes ?? []).map((cls) => cls.class_type_id)));
     const instructorIds = (classes ?? [])
@@ -91,16 +91,16 @@ export default async function MyBookingsPage() {
         ? supabase.from('class_types').select('id, name').in('id', typeIds)
         : Promise.resolve({ data: [], error: null }),
       instructorIds.length > 0
-        ? supabase.from('profiles').select('id, full_name, email').in('id', instructorIds)
+        ? supabase.from('profiles').select('id, full_name').in('id', instructorIds)
         : Promise.resolve({ data: [], error: null }),
     ]);
     const typeNames = new Map((typesRes.data ?? []).map((type) => [type.id, type.name]));
     const instructorNames = new Map(
-      (instructorsRes.data ?? []).map((person) => [person.id, person.full_name ?? person.email]),
+      (instructorsRes.data ?? []).map((person) => [person.id, person.full_name]),
     );
     for (const cls of classes ?? []) {
       classInfo.set(cls.id, {
-        startsAt: cls.starts_at,
+        startsAt: cls.scheduled_at,
         typeName: typeNames.get(cls.class_type_id) ?? 'Clase',
         instructorName: cls.instructor_id ? (instructorNames.get(cls.instructor_id) ?? null) : null,
       });

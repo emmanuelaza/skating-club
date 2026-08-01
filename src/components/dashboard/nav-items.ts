@@ -5,9 +5,8 @@ import {
   Calendar,
   CreditCard,
   ShoppingBag,
+  Receipt,
   BarChart3,
-  Megaphone,
-  Settings,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -28,9 +27,8 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/classes' as Route, label: 'Clases', icon: Calendar },
   { href: '/dashboard/memberships' as Route, label: 'Membresías', icon: CreditCard },
   { href: '/dashboard/store' as Route, label: 'Tienda', icon: ShoppingBag },
+  { href: '/dashboard/orders' as Route, label: 'Pedidos', icon: Receipt },
   { href: '/dashboard/reports' as Route, label: 'Reportes', icon: BarChart3 },
-  { href: '/dashboard/announcements' as Route, label: 'Anuncios', icon: Megaphone },
-  { href: '/dashboard/settings' as Route, label: 'Configuración', icon: Settings },
 ];
 
 /** Etiquetas legibles por segmento de ruta, para el breadcrumb. */
@@ -40,7 +38,6 @@ export const SEGMENT_LABELS: Record<string, string> = {
   classes: 'Clases',
   memberships: 'Membresías',
   store: 'Tienda',
+  orders: 'Pedidos',
   reports: 'Reportes',
-  announcements: 'Anuncios',
-  settings: 'Configuración',
 };

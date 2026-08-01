@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatCOP, formatDate, formatNumber, formatTime } from '@/lib/format';
+import { computeLoyaltyBalance } from '@/lib/loyalty';
 import type {
   UserRole,
   SubscriptionStatus,
@@ -22,7 +23,6 @@ import type {
   OrderStatus,
   LoyaltyType,
 } from '@/types/database';
-import type { LoyaltyBalance } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,66 +36,41 @@ const ROLE_LABELS: Record<UserRole, string> = {
 };
 
 const SUBSCRIPTION_BADGE: Record<SubscriptionStatus, { label: string; variant: BadgeVariant }> = {
+  trialing: { label: 'En prueba', variant: 'secondary' },
   active: { label: 'Activa', variant: 'success' },
   past_due: { label: 'Vencida', variant: 'warning' },
-  canceled: { label: 'Cancelada', variant: 'destructive' },
-  paused: { label: 'Pausada', variant: 'secondary' },
-  pending: { label: 'Pendiente', variant: 'secondary' },
+  cancelled: { label: 'Cancelada', variant: 'destructive' },
+  frozen: { label: 'Congelada', variant: 'secondary' },
+  expired: { label: 'Expirada', variant: 'secondary' },
 };
 
 const BOOKING_LABELS: Record<BookingStatus, string> = {
   confirmed: 'Confirmada',
   waitlisted: 'Lista de espera',
-  canceled: 'Cancelada',
+  cancelled: 'Cancelada',
   attended: 'Asistió',
   no_show: 'No asistió',
 };
 
 const ORDER_BADGE: Record<OrderStatus, { label: string; variant: BadgeVariant }> = {
   pending: { label: 'Pendiente', variant: 'secondary' },
+  payment_pending: { label: 'Pago pendiente', variant: 'warning' },
   paid: { label: 'Pagado', variant: 'success' },
-  fulfilled: { label: 'Entregado', variant: 'success' },
-  canceled: { label: 'Cancelado', variant: 'destructive' },
+  preparing: { label: 'En preparación', variant: 'secondary' },
+  shipped: { label: 'Enviado', variant: 'secondary' },
+  delivered: { label: 'Entregado', variant: 'success' },
+  cancelled: { label: 'Cancelado', variant: 'destructive' },
   refunded: { label: 'Reembolsado', variant: 'warning' },
 };
 
 const LOYALTY_LABELS: Record<LoyaltyType, string> = {
-  earned: 'Ganados',
+  earned_booking: 'Ganados · clase',
+  earned_purchase: 'Ganados · compra',
+  earned_referral: 'Ganados · referido',
+  earned_manual: 'Ajuste del club',
   redeemed: 'Canjeados',
   expired: 'Expirados',
-  adjusted: 'Ajuste',
 };
-
-function computeBalance(
-  profileId: string,
-  movements: { type: LoyaltyType; points: number }[],
-): LoyaltyBalance {
-  let earned = 0;
-  let redeemed = 0;
-  let balance = 0;
-  for (const movement of movements) {
-    const points = movement.points;
-    switch (movement.type) {
-      case 'earned':
-        earned += points;
-        balance += points;
-        break;
-      case 'redeemed':
-        redeemed += Math.abs(points);
-        balance -= Math.abs(points);
-        break;
-      case 'expired':
-        balance -= Math.abs(points);
-        break;
-      case 'adjusted':
-        balance += points;
-        if (points >= 0) earned += points;
-        else redeemed += Math.abs(points);
-        break;
-    }
-  }
-  return { profile_id: profileId, balance, total_earned: earned, total_redeemed: redeemed };
-}
 
 export default async function MemberDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -139,7 +114,7 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
   if (classIds.length > 0) {
     const { data: classes } = await supabase
       .from('classes')
-      .select('id, starts_at, class_type_id')
+      .select('id, scheduled_at, class_type_id')
       .in('id', classIds);
     const typeIds = Array.from(new Set((classes ?? []).map((cls) => cls.class_type_id)));
     const typeNames = new Map<string, string>();
@@ -149,7 +124,7 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
     }
     for (const cls of classes ?? []) {
       classInfo.set(cls.id, {
-        startsAt: cls.starts_at,
+        startsAt: cls.scheduled_at,
         typeName: typeNames.get(cls.class_type_id) ?? 'Clase',
       });
     }
@@ -157,8 +132,8 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
 
   const activeSub = subscriptions.find((sub) => sub.status === 'active') ?? subscriptions[0] ?? null;
   const membershipBadge = activeSub ? SUBSCRIPTION_BADGE[activeSub.status] : null;
-  const balance = computeBalance(id, loyalty);
-  const displayName = profile.full_name ?? profile.email;
+  const balance = computeLoyaltyBalance(id, loyalty);
+  const displayName = profile.full_name;
 
   return (
     <div className="space-y-6">
@@ -169,7 +144,7 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
             <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground">
               {displayName}
             </h1>
-            <p className="text-sm text-muted-foreground">{profile.email}</p>
+            <p className="text-sm text-muted-foreground">{profile.phone ?? '—'}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -223,10 +198,10 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
                           </Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {formatDate(sub.current_period_start)}
+                          {formatDate(sub.starts_at)}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {formatDate(sub.current_period_end)}
+                          {formatDate(sub.ends_at)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -294,7 +269,7 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
                     {orders.map((order) => (
                       <TableRow key={order.id}>
                         <TableCell className="font-mono text-xs text-foreground">
-                          {order.reference}
+                          #{order.id.slice(0, 8).toUpperCase()}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
                           {formatDate(order.created_at)}
@@ -381,7 +356,7 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
                             {LOYALTY_LABELS[movement.type]}
                           </TableCell>
                           <TableCell className="text-muted-foreground">
-                            {movement.reason ?? '—'}
+                            {movement.description ?? '—'}
                           </TableCell>
                           <TableCell className="text-muted-foreground">
                             {formatDate(movement.created_at)}

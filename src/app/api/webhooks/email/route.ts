@@ -7,9 +7,11 @@ import type { Json } from '@/types/database';
 /**
  * Webhook de eventos de Resend (entrega, rebote, queja).
  * - email.delivered  -> log en payment_events (provider 'resend').
- * - email.bounced    -> log + marca el perfil con email inválido.
+ * - email.bounced    -> log + anota el rebote en `profiles.notes`.
  * - email.complained -> log.
  *
+ * `profiles` no guarda el correo (vive en auth.users), así que el destinatario
+ * se resuelve vía la API admin de auth y de ahí a su perfil por `auth_user_id`.
  * Verifica la firma Svix si RESEND_WEBHOOK_SECRET está configurado.
  */
 
@@ -75,19 +77,31 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const supabase = createAdminClient();
 
-  // Resuelve el perfil del destinatario (para tenant y marca de rebote).
-  let profile: { id: string; tenant_id: string } | null = null;
+  // Resuelve el perfil del destinatario: correo -> auth.users -> profiles.
+  let profile: { id: string; tenant_id: string; notes: string | null } | null = null;
   if (recipient) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('id, tenant_id')
-      .eq('email', recipient)
-      .maybeSingle();
-    profile = data;
+    const { data: userList } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1000 });
+    const authUser = userList?.users.find(
+      (user) => user.email?.toLowerCase() === recipient,
+    );
+    if (authUser) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, tenant_id, notes')
+        .eq('auth_user_id', authUser.id)
+        .maybeSingle();
+      profile = data;
+    }
   }
 
   if (event.type === 'email.bounced' && profile) {
-    await supabase.from('profiles').update({ email_invalid: true }).eq('id', profile.id);
+    const marker = '[correo rebotado]';
+    if (!profile.notes?.includes(marker)) {
+      await supabase
+        .from('profiles')
+        .update({ notes: [profile.notes, marker].filter(Boolean).join(' ') })
+        .eq('id', profile.id);
+    }
   }
 
   // Bitácora del evento (requiere tenant; si no se resuelve, solo queda el log).
@@ -95,10 +109,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await supabase.from('payment_events').insert({
       tenant_id: profile.tenant_id,
       provider: 'resend',
-      provider_event_id: event.data?.email_id ?? null,
       event_type: event.type,
+      reference_id: event.data?.email_id ?? null,
       payload: event as unknown as Json,
-      processed: true,
+      status: 'processed',
+      processed_at: new Date().toISOString(),
     });
   }
 

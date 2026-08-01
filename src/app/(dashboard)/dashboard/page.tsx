@@ -48,22 +48,23 @@ async function KpiSection() {
   if (planIds.length > 0) {
     const { data: plans, error: plansError } = await supabase
       .from('membership_plans')
-      .select('id, price_cop, interval')
+      .select('id, price_cop, duration_days')
       .in('id', planIds);
     if (plansError) throw new Error(plansError.message);
     const priceByPlan = new Map((plans ?? []).map((plan) => [plan.id, plan]));
     for (const subscription of activeSubs ?? []) {
       const plan = priceByPlan.get(subscription.plan_id);
       if (!plan) continue;
-      mrrCop += plan.interval === 'year' ? plan.price_cop / 12 : plan.price_cop;
+      // Normaliza a ingreso mensual según la duración real del plan en días.
+      mrrCop += plan.duration_days >= 180 ? plan.price_cop / 12 : plan.price_cop;
     }
   }
 
   const { count: classesToday } = await supabase
     .from('classes')
     .select('id', { count: 'exact', head: true })
-    .gte('starts_at', today.start)
-    .lt('starts_at', today.end);
+    .gte('scheduled_at', today.start)
+    .lt('scheduled_at', today.end);
 
   const { count: bookingsToday } = await supabase
     .from('bookings')
@@ -189,7 +190,7 @@ async function RecentMembersSection() {
   const supabase = await createClient();
   const { data: members, error } = await supabase
     .from('profiles')
-    .select('id, full_name, email, avatar_url, created_at')
+    .select('id, full_name, phone, avatar_url, created_at')
     .order('created_at', { ascending: false })
     .limit(5);
   if (error) throw new Error(error.message);
@@ -205,12 +206,10 @@ async function RecentMembersSection() {
         ) : (
           (members ?? []).map((member) => (
             <div key={member.id} className="flex items-center gap-3">
-              <Avatar name={member.full_name ?? member.email} src={member.avatar_url} />
+              <Avatar name={member.full_name} src={member.avatar_url} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-foreground">
-                  {member.full_name ?? member.email}
-                </p>
-                <p className="truncate text-xs text-muted-foreground">{member.email}</p>
+                <p className="truncate text-sm font-medium text-foreground">{member.full_name}</p>
+                <p className="truncate text-xs text-muted-foreground">{member.phone ?? '—'}</p>
               </div>
               <span className="shrink-0 text-xs text-muted-foreground">
                 {formatDate(member.created_at)}
@@ -232,10 +231,10 @@ async function UpcomingClassesSection() {
 
   const { data: classes, error } = await supabase
     .from('classes')
-    .select('id, class_type_id, instructor_id, capacity, starts_at, location')
-    .gte('starts_at', nowIso)
-    .lt('starts_at', today.end)
-    .order('starts_at', { ascending: true })
+    .select('id, class_type_id, instructor_id, capacity, scheduled_at, room')
+    .gte('scheduled_at', nowIso)
+    .lt('scheduled_at', today.end)
+    .order('scheduled_at', { ascending: true })
     .limit(3);
   if (error) throw new Error(error.message);
 
@@ -262,7 +261,7 @@ async function UpcomingClassesSection() {
       .from('bookings')
       .select('class_id')
       .in('class_id', classIds)
-      .neq('status', 'canceled');
+      .neq('status', 'cancelled');
     for (const booking of data ?? []) {
       bookedByClass.set(booking.class_id, (bookedByClass.get(booking.class_id) ?? 0) + 1);
     }
@@ -293,7 +292,7 @@ async function UpcomingClassesSection() {
                     {typeNames.get(row.class_type_id) ?? 'Clase'}
                   </p>
                   <p className="truncate text-xs text-muted-foreground">
-                    {formatTime(row.starts_at)}
+                    {formatTime(row.scheduled_at)}
                     {row.instructor_id
                       ? ` · ${instructorNames.get(row.instructor_id) ?? '—'}`
                       : ''}

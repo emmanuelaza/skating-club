@@ -29,7 +29,7 @@ export async function updateOwnProfileAction(formData: FormData): Promise<Action
     .update({
       full_name: parsed.data.fullName,
       phone: parsed.data.phone || null,
-      date_of_birth: parsed.data.dateOfBirth || null,
+      birth_date: parsed.data.dateOfBirth || null,
     })
     .eq('id', profile.id);
 
@@ -58,7 +58,7 @@ export async function changePasswordAction(formData: FormData): Promise<ActionRe
 
   // Aviso de seguridad por email (no bloquea el cambio).
   const tenant = await getCurrentTenant();
-  if (tenant) {
+  if (tenant && profile.email) {
     await sendPasswordChanged(
       { email: profile.email, full_name: profile.full_name },
       new Date().toISOString(),

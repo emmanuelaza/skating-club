@@ -6,16 +6,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatCOP, formatDate } from '@/lib/format';
+import { durationDaysToInterval } from '@/lib/memberships';
 import type { SubscriptionStatus } from '@/types/database';
 
 export const dynamic = 'force-dynamic';
 
 const STATUS_BADGE: Record<SubscriptionStatus, { label: string; variant: 'success' | 'warning' | 'destructive' | 'secondary' }> = {
+  trialing: { label: 'En prueba', variant: 'secondary' },
   active: { label: 'Activa', variant: 'success' },
-  paused: { label: 'Congelada', variant: 'secondary' },
+  frozen: { label: 'Congelada', variant: 'secondary' },
   past_due: { label: 'Vencida', variant: 'warning' },
-  canceled: { label: 'Cancelada', variant: 'destructive' },
-  pending: { label: 'Pendiente', variant: 'secondary' },
+  cancelled: { label: 'Cancelada', variant: 'destructive' },
+  expired: { label: 'Expirada', variant: 'secondary' },
 };
 
 function daysBetween(from: Date, to: Date): number {
@@ -46,25 +48,25 @@ export default async function MembershipPage() {
   if (planIds.length > 0) {
     const { data: plans } = await supabase
       .from('membership_plans')
-      .select('id, name, features')
+      .select('id, name, benefits')
       .in('id', planIds);
     for (const plan of plans ?? []) planNames.set(plan.id, plan.name);
   }
 
   const current =
-    subscriptions.find((sub) => ['active', 'paused', 'past_due'].includes(sub.status)) ??
+    subscriptions.find((sub) => ['active', 'frozen', 'past_due', 'trialing'].includes(sub.status)) ??
     subscriptions[0] ??
     null;
   if (current) {
     const benefitsPlan = availablePlans.find((plan) => plan.id === current.plan_id);
-    currentBenefits = asBenefits(benefitsPlan?.features);
+    currentBenefits = asBenefits(benefitsPlan?.benefits);
   }
 
   let remainingDays: number | null = null;
   let progress = 0;
-  if (current?.current_period_start && current.current_period_end) {
-    const start = new Date(current.current_period_start);
-    const end = new Date(current.current_period_end);
+  if (current?.starts_at && current.ends_at) {
+    const start = new Date(current.starts_at);
+    const end = new Date(current.ends_at);
     const now = new Date();
     const total = Math.max(daysBetween(start, end), 1);
     const elapsed = Math.min(Math.max(daysBetween(start, now), 0), total);
@@ -90,12 +92,10 @@ export default async function MembershipPage() {
               </Badge>
             </div>
 
-            {current.current_period_start || current.current_period_end ? (
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Inicio: {formatDate(current.current_period_start)}</span>
-                <span>Vence: {formatDate(current.current_period_end)}</span>
-              </div>
-            ) : null}
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Inicio: {formatDate(current.starts_at)}</span>
+              <span>Vence: {formatDate(current.ends_at)}</span>
+            </div>
 
             {remainingDays !== null ? (
               <div className="space-y-1.5">
@@ -121,7 +121,7 @@ export default async function MembershipPage() {
               <div className="space-y-1 border-t border-border pt-4">
                 <FreezeButton subscriptionId={current.id} />
                 <p className="text-center text-xs text-muted-foreground">
-                  Días de congelamiento usados: {current.freeze_days_used}
+                  Días de congelamiento usados: {current.frozen_days_used}
                 </p>
               </div>
             ) : null}
@@ -143,7 +143,7 @@ export default async function MembershipPage() {
                       {planNames.get(sub.plan_id) ?? 'Plan'}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {formatDate(sub.current_period_start)} – {formatDate(sub.current_period_end)}
+                      {formatDate(sub.starts_at)} – {formatDate(sub.ends_at)}
                     </p>
                   </div>
                   <Badge variant={STATUS_BADGE[sub.status].variant}>
@@ -165,7 +165,8 @@ export default async function MembershipPage() {
                 <div>
                   <p className="text-sm font-medium text-foreground">{plan.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {formatCOP(plan.price_cop)}/{plan.interval === 'year' ? 'año' : 'mes'}
+                    {formatCOP(plan.price_cop)}/
+                    {durationDaysToInterval(plan.duration_days) === 'year' ? 'año' : 'mes'}
                   </p>
                 </div>
                 <Button size="sm" variant="secondary" disabled title="Pagos disponibles próximamente">

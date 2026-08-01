@@ -17,10 +17,11 @@ interface ProductRow {
   name: string;
   category: string | null;
   images: string[];
-  lowStockAlert: number;
   isActive: boolean;
   variantCount: number;
   stockTotal: number;
+  /** true si alguna variante está en o bajo su umbral de alerta. */
+  lowStock: boolean;
 }
 
 function firstImage(images: unknown): string | null {
@@ -40,7 +41,7 @@ export default async function StorePage({
 
   let productsQuery = supabase
     .from('products')
-    .select('id, name, category, images, low_stock_alert, is_active')
+    .select('id, name, category, image_urls, is_active')
     .order('created_at', { ascending: false });
   if (category) productsQuery = productsQuery.eq('category', category);
 
@@ -60,18 +61,21 @@ export default async function StorePage({
     ),
   ).sort();
 
-  // Variantes -> conteo y stock total por producto.
+  // Variantes -> conteo, stock total y alerta de stock bajo por producto
+  // (el umbral `low_stock_alert` vive en cada variante).
   const variantCount = new Map<string, number>();
   const stockTotal = new Map<string, number>();
+  const lowStock = new Set<string>();
   const productIds = products.map((product) => product.id);
   if (productIds.length > 0) {
     const { data: variants } = await supabase
       .from('product_variants')
-      .select('product_id, stock')
+      .select('product_id, stock, low_stock_alert')
       .in('product_id', productIds);
     for (const variant of variants ?? []) {
       variantCount.set(variant.product_id, (variantCount.get(variant.product_id) ?? 0) + 1);
       stockTotal.set(variant.product_id, (stockTotal.get(variant.product_id) ?? 0) + variant.stock);
+      if (variant.stock <= variant.low_stock_alert) lowStock.add(variant.product_id);
     }
   }
 
@@ -79,13 +83,13 @@ export default async function StorePage({
     id: product.id,
     name: product.name,
     category: product.category,
-    images: Array.isArray(product.images)
-      ? product.images.filter((item): item is string => typeof item === 'string')
+    images: Array.isArray(product.image_urls)
+      ? product.image_urls.filter((item): item is string => typeof item === 'string')
       : [],
-    lowStockAlert: product.low_stock_alert,
     isActive: product.is_active,
     variantCount: variantCount.get(product.id) ?? 0,
     stockTotal: stockTotal.get(product.id) ?? 0,
+    lowStock: lowStock.has(product.id),
   }));
 
   const columns: Column<ProductRow>[] = [
@@ -129,7 +133,7 @@ export default async function StorePage({
       key: 'stock',
       header: 'Stock total',
       cell: (product) => {
-        const low = product.stockTotal <= product.lowStockAlert;
+        const low = product.lowStock;
         return (
           <div className="flex items-center gap-2">
             <span className={cn('font-medium', low ? 'text-destructive' : 'text-foreground')}>

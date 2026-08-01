@@ -15,9 +15,15 @@ export function computeLoyaltyBalance(
   for (const movement of movements) {
     const points = movement.points;
     switch (movement.type) {
-      case 'earned':
-        earned += points;
+      // Los cuatro tipos `earned_*` del enum suman al saldo. `earned_manual`
+      // admite ajustes negativos del staff, por eso se reparte según el signo.
+      case 'earned_booking':
+      case 'earned_purchase':
+      case 'earned_referral':
+      case 'earned_manual':
         balance += points;
+        if (points >= 0) earned += points;
+        else redeemed += Math.abs(points);
         break;
       case 'redeemed':
         redeemed += Math.abs(points);
@@ -25,11 +31,6 @@ export function computeLoyaltyBalance(
         break;
       case 'expired':
         balance -= Math.abs(points);
-        break;
-      case 'adjusted':
-        balance += points;
-        if (points >= 0) earned += points;
-        else redeemed += Math.abs(points);
         break;
     }
   }

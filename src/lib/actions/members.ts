@@ -15,7 +15,7 @@ export async function updateProfileAction(formData: FormData): Promise<ActionRes
     id: formData.get('id'),
     fullName: formData.get('fullName'),
     phone: formData.get('phone') ?? '',
-    documentId: formData.get('documentId') ?? '',
+    notes: formData.get('notes') ?? '',
     role: formData.get('role'),
   });
   if (!parsed.success) {
@@ -28,7 +28,7 @@ export async function updateProfileAction(formData: FormData): Promise<ActionRes
     .update({
       full_name: parsed.data.fullName,
       phone: parsed.data.phone || null,
-      document_id: parsed.data.documentId || null,
+      notes: parsed.data.notes || null,
       role: parsed.data.role,
     })
     .eq('id', parsed.data.id);
@@ -86,12 +86,14 @@ export async function createMemberAction(formData: FormData): Promise<ActionResu
   }
 
   const supabase = await createClient();
+  // `profiles` no tiene columna `email` (el correo vive en auth.users). Para un
+  // perfil pre-registro, el correo de contacto se conserva en `notes`.
   const { error } = await supabase.from('profiles').insert({
     tenant_id: staff.tenant_id,
     auth_user_id: null,
-    email: parsed.data.email,
     full_name: parsed.data.fullName,
     phone: parsed.data.phone || null,
+    notes: `Correo de contacto: ${parsed.data.email}`,
     role: parsed.data.role,
   });
 

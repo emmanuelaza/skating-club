@@ -15,7 +15,7 @@ export const updateProfileSchema = z.object({
   id: uuidSchema,
   fullName: z.string().min(2, 'Ingresa el nombre completo').max(120, 'Nombre demasiado largo'),
   phone: phoneSchema.optional().or(z.literal('')),
-  documentId: z.string().max(20, 'Documento inválido').optional().or(z.literal('')),
+  notes: z.string().max(500, 'Notas demasiado largas').optional().or(z.literal('')),
   role: roleEnum,
 });
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

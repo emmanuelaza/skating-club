@@ -33,7 +33,7 @@ export async function getTenant(subdomain: string): Promise<Tenant | null> {
       const { data, error } = await supabase
         .from('tenants')
         .select('*')
-        .eq('slug', subdomain)
+        .eq('subdomain', subdomain)
         .eq('is_active', true)
         .maybeSingle();
 

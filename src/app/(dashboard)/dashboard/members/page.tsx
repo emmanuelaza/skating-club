@@ -18,8 +18,8 @@ type BadgeVariant = 'success' | 'warning' | 'destructive';
 
 interface MemberRow {
   id: string;
-  full_name: string | null;
-  email: string;
+  full_name: string;
+  phone: string | null;
   avatar_url: string | null;
   is_active: boolean;
   created_at: string;
@@ -40,7 +40,7 @@ async function MembersTable({ search, status, page }: MembersTableProps) {
   let restrictIds: string[] | null = null;
   if (status === 'activos' || status === 'vencidos') {
     const statuses: SubscriptionStatus[] =
-      status === 'activos' ? ['active'] : ['past_due', 'canceled', 'paused', 'pending'];
+      status === 'activos' ? ['active'] : ['past_due', 'cancelled', 'frozen', 'expired'];
     const { data: subs, error } = await supabase
       .from('subscriptions')
       .select('profile_id')
@@ -52,11 +52,11 @@ async function MembersTable({ search, status, page }: MembersTableProps) {
 
   let query = supabase
     .from('profiles')
-    .select('id, full_name, email, avatar_url, is_active, created_at', { count: 'exact' });
+    .select('id, full_name, phone, avatar_url, is_active, created_at', { count: 'exact' });
 
   if (search) {
     const safe = search.replace(/[%,()]/g, ' ').trim();
-    if (safe) query = query.or(`full_name.ilike.%${safe}%,email.ilike.%${safe}%`);
+    if (safe) query = query.or(`full_name.ilike.%${safe}%,phone.ilike.%${safe}%`);
   }
   if (status === 'suspendidos') query = query.eq('is_active', false);
   if (restrictIds) query = query.in('id', restrictIds);
@@ -103,15 +103,15 @@ async function MembersTable({ search, status, page }: MembersTableProps) {
       header: 'Nombre',
       cell: (member) => (
         <div className="flex items-center gap-3">
-          <Avatar name={member.full_name ?? member.email} src={member.avatar_url} />
-          <span className="font-medium text-foreground">{member.full_name ?? '—'}</span>
+          <Avatar name={member.full_name} src={member.avatar_url} />
+          <span className="font-medium text-foreground">{member.full_name}</span>
         </div>
       ),
     },
     {
-      key: 'email',
-      header: 'Email',
-      cell: (member) => <span className="text-muted-foreground">{member.email}</span>,
+      key: 'phone',
+      header: 'Teléfono',
+      cell: (member) => <span className="text-muted-foreground">{member.phone ?? '—'}</span>,
     },
     {
       key: 'plan',

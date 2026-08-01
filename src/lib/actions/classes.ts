@@ -7,10 +7,6 @@ import { uuidSchema } from '@/lib/validations/common';
 import { createClassSchema, updateClassSchema } from '@/lib/validations/classes';
 import type { ActionResult } from '@/types';
 
-function endsAtFrom(startsAtIso: string, durationMinutes: number): string {
-  return new Date(new Date(startsAtIso).getTime() + durationMinutes * 60_000).toISOString();
-}
-
 export async function createClassAction(formData: FormData): Promise<ActionResult> {
   const staff = await requireStaff();
 
@@ -26,16 +22,20 @@ export async function createClassAction(formData: FormData): Promise<ActionResul
     return { ok: false, error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
   }
 
-  const startsAtIso = new Date(parsed.data.startsAt).toISOString();
+  // `classes.instructor_id` es NOT NULL en la base: sin instructor no hay clase.
+  if (!parsed.data.instructorId) {
+    return { ok: false, error: 'Selecciona un instructor para la clase.' };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.from('classes').insert({
     tenant_id: staff.tenant_id,
     class_type_id: parsed.data.classTypeId,
-    instructor_id: parsed.data.instructorId || null,
-    location: parsed.data.location || null,
+    instructor_id: parsed.data.instructorId,
+    room: parsed.data.location || null,
     capacity: parsed.data.capacity,
-    starts_at: startsAtIso,
-    ends_at: endsAtFrom(startsAtIso, parsed.data.durationMinutes),
+    scheduled_at: new Date(parsed.data.startsAt).toISOString(),
+    duration_minutes: parsed.data.durationMinutes,
     status: 'scheduled',
   });
 
@@ -63,17 +63,20 @@ export async function updateClassAction(formData: FormData): Promise<ActionResul
     return { ok: false, error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
   }
 
-  const startsAtIso = new Date(parsed.data.startsAt).toISOString();
+  if (!parsed.data.instructorId) {
+    return { ok: false, error: 'Selecciona un instructor para la clase.' };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase
     .from('classes')
     .update({
       class_type_id: parsed.data.classTypeId,
-      instructor_id: parsed.data.instructorId || null,
-      location: parsed.data.location || null,
+      instructor_id: parsed.data.instructorId,
+      room: parsed.data.location || null,
       capacity: parsed.data.capacity,
-      starts_at: startsAtIso,
-      ends_at: endsAtFrom(startsAtIso, parsed.data.durationMinutes),
+      scheduled_at: new Date(parsed.data.startsAt).toISOString(),
+      duration_minutes: parsed.data.durationMinutes,
     })
     .eq('id', parsed.data.id);
 
@@ -94,7 +97,7 @@ export async function cancelClassAction(formData: FormData): Promise<ActionResul
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.from('classes').update({ status: 'canceled' }).eq('id', id.data);
+  const { error } = await supabase.from('classes').update({ status: 'cancelled' }).eq('id', id.data);
   if (error) {
     return { ok: false, error: 'No se pudo cancelar la clase.' };
   }

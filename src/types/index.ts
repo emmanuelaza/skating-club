@@ -25,6 +25,16 @@ export type Announcement = Tables<'announcements'>;
 
 export type { UserRole };
 
+/**
+ * Perfil de la sesión activa: la fila de `profiles` más el correo.
+ *
+ * `profiles` NO tiene columna `email` — el correo vive en `auth.users`, así que
+ * lo adjunta `getProfile()` desde la sesión de Supabase.
+ */
+export interface SessionProfile extends Profile {
+  email: string | null;
+}
+
 /** Resultado estándar de una Server Action con manejo de error tipado. */
 export type ActionResult<T = void> =
   | { ok: true; data: T }

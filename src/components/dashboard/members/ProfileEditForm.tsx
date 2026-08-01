@@ -28,7 +28,7 @@ export function ProfileEditForm({ profile }: { profile: Profile }) {
       id: profile.id,
       fullName: profile.full_name ?? '',
       phone: profile.phone ?? '',
-      documentId: profile.document_id ?? '',
+      notes: profile.notes ?? '',
       role: profile.role,
     },
   });
@@ -40,7 +40,7 @@ export function ProfileEditForm({ profile }: { profile: Profile }) {
     formData.set('id', values.id);
     formData.set('fullName', values.fullName);
     formData.set('phone', values.phone ?? '');
-    formData.set('documentId', values.documentId ?? '');
+    formData.set('notes', values.notes ?? '');
     formData.set('role', values.role);
     startTransition(async () => {
       const result = await updateProfileAction(formData);
@@ -70,10 +70,10 @@ export function ProfileEditForm({ profile }: { profile: Profile }) {
           {errors.phone ? <p className="text-sm text-destructive">{errors.phone.message}</p> : null}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="edit-document">Documento</Label>
-          <Input id="edit-document" {...register('documentId')} />
-          {errors.documentId ? (
-            <p className="text-sm text-destructive">{errors.documentId.message}</p>
+          <Label htmlFor="edit-notes">Notas</Label>
+          <Input id="edit-notes" {...register('notes')} />
+          {errors.notes ? (
+            <p className="text-sm text-destructive">{errors.notes.message}</p>
           ) : null}
         </div>
       </div>

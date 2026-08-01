@@ -49,14 +49,14 @@ export default async function ClassesPage({
   const [classesResult, typesResult, instructorsResult] = await Promise.all([
     supabase
       .from('classes')
-      .select('id, class_type_id, instructor_id, capacity, starts_at, ends_at, location, status')
-      .gte('starts_at', weekStart.toISOString())
-      .lt('starts_at', weekEnd.toISOString())
-      .order('starts_at', { ascending: true }),
+      .select('id, class_type_id, instructor_id, capacity, scheduled_at, duration_minutes, room, status')
+      .gte('scheduled_at', weekStart.toISOString())
+      .lt('scheduled_at', weekEnd.toISOString())
+      .order('scheduled_at', { ascending: true }),
     supabase.from('class_types').select('id, name').eq('is_active', true).order('name'),
     supabase
       .from('profiles')
-      .select('id, full_name, email')
+      .select('id, full_name')
       .in('role', ['instructor', 'tenant_admin', 'super_admin'])
       .order('full_name'),
   ]);
@@ -67,7 +67,7 @@ export default async function ClassesPage({
   const classes = classesResult.data ?? [];
   const typeNames = new Map((typesResult.data ?? []).map((type) => [type.id, type.name]));
   const instructorNames = new Map(
-    (instructorsResult.data ?? []).map((person) => [person.id, person.full_name ?? person.email]),
+    (instructorsResult.data ?? []).map((person) => [person.id, person.full_name]),
   );
 
   // Inscritos por clase (no cancelados).
@@ -78,16 +78,16 @@ export default async function ClassesPage({
       .from('bookings')
       .select('class_id, profile_id')
       .in('class_id', classIds)
-      .neq('status', 'canceled');
+      .neq('status', 'cancelled');
     const profileIds = Array.from(new Set((bookings ?? []).map((booking) => booking.profile_id)));
     const profileNames = new Map<string, string>();
     if (profileIds.length > 0) {
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, full_name, email')
+        .select('id, full_name')
         .in('id', profileIds);
       for (const profile of profiles ?? []) {
-        profileNames.set(profile.id, profile.full_name ?? profile.email);
+        profileNames.set(profile.id, profile.full_name);
       }
     }
     for (const booking of bookings ?? []) {
@@ -101,15 +101,17 @@ export default async function ClassesPage({
     const enrolled = enrolledByClass.get(cls.id) ?? [];
     return {
       id: cls.id,
-      startsAt: cls.starts_at,
-      endsAt: cls.ends_at,
+      startsAt: cls.scheduled_at,
+      endsAt: new Date(
+        new Date(cls.scheduled_at).getTime() + cls.duration_minutes * 60_000,
+      ).toISOString(),
       typeName: typeNames.get(cls.class_type_id) ?? 'Clase',
-      instructorName: cls.instructor_id ? (instructorNames.get(cls.instructor_id) ?? null) : null,
-      location: cls.location,
+      instructorName: instructorNames.get(cls.instructor_id) ?? null,
+      location: cls.room,
       capacity: cls.capacity,
       booked: enrolled.length,
       enrolled,
-      canceled: cls.status === 'canceled',
+      canceled: cls.status === 'cancelled',
     };
   });
 
@@ -119,7 +121,7 @@ export default async function ClassesPage({
   }));
   const instructorOptions: Option[] = (instructorsResult.data ?? []).map((person) => ({
     id: person.id,
-    name: person.full_name ?? person.email,
+    name: person.full_name,
   }));
 
   const rangeLabel = `${RANGE_LABEL.format(weekStart)} – ${RANGE_LABEL.format(

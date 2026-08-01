@@ -33,8 +33,7 @@ export async function createProductAction(input: unknown): Promise<ActionResult>
       name: parsed.data.name,
       description: parsed.data.description || null,
       category: parsed.data.category || null,
-      images: parseImages(parsed.data.images ?? ''),
-      low_stock_alert: parsed.data.lowStockAlert,
+      image_urls: parseImages(parsed.data.images ?? ''),
     })
     .select('id')
     .single();
@@ -43,14 +42,16 @@ export async function createProductAction(input: unknown): Promise<ActionResult>
     return { ok: false, error: 'No se pudo crear el producto.' };
   }
 
-  const variantsPayload = parsed.data.variants.map((variant) => ({
+  // `product_variants.sku` es NOT NULL y no hay columna `name`: el nombre de la
+  // variante (talla/color) se usa como SKU legible si no se especifica uno.
+  const variantsPayload = parsed.data.variants.map((variant, index) => ({
     tenant_id: staff.tenant_id,
     product_id: product.id,
-    name: variant.name,
-    sku: variant.sku || null,
+    sku: variant.sku || `${parsed.data.name}-${variant.name || index + 1}`.replace(/\s+/g, '-').toUpperCase(),
+    size: variant.name || null,
     price_cop: variant.priceCop,
-    currency: 'COP',
     stock: variant.stock,
+    low_stock_alert: parsed.data.lowStockAlert,
   }));
 
   const { error: variantsError } = await supabase.from('product_variants').insert(variantsPayload);
@@ -79,8 +80,7 @@ export async function updateProductAction(input: unknown): Promise<ActionResult>
       name: parsed.data.name,
       description: parsed.data.description || null,
       category: parsed.data.category || null,
-      images: parseImages(parsed.data.images ?? ''),
-      low_stock_alert: parsed.data.lowStockAlert,
+      image_urls: parseImages(parsed.data.images ?? ''),
     })
     .eq('id', parsed.data.id);
 
@@ -104,10 +104,11 @@ export async function createVariantAction(input: unknown): Promise<ActionResult>
   const { error } = await supabase.from('product_variants').insert({
     tenant_id: staff.tenant_id,
     product_id: parsed.data.productId,
-    name: parsed.data.name,
-    sku: parsed.data.sku || null,
+    sku:
+      parsed.data.sku ||
+      `VAR-${parsed.data.name || Date.now()}`.replace(/\s+/g, '-').toUpperCase(),
+    size: parsed.data.name || null,
     price_cop: parsed.data.priceCop,
-    currency: 'COP',
     stock: parsed.data.stock,
   });
 

@@ -41,7 +41,8 @@ function NewClassForm({
     resolver: zodResolver(createClassSchema),
     defaultValues: {
       classTypeId: classTypes[0]?.id ?? '',
-      instructorId: '',
+      // La columna `classes.instructor_id` es NOT NULL: siempre hay instructor.
+      instructorId: instructors[0]?.id ?? '',
       location: '',
       capacity: 10,
       startsAt: '',
@@ -88,7 +89,6 @@ function NewClassForm({
       <div className="space-y-2">
         <Label htmlFor="class-instructor">Instructor</Label>
         <select id="class-instructor" className={selectClass} {...register('instructorId')}>
-          <option value="">Sin asignar</option>
           {instructors.map((instructor) => (
             <option key={instructor.id} value={instructor.id}>
               {instructor.name}

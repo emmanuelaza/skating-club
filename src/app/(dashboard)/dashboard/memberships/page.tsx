@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { formatCOP, formatDate } from '@/lib/format';
+import { durationDaysToInterval } from '@/lib/memberships';
 import type { SubscriptionStatus } from '@/types/database';
 
 export const dynamic = 'force-dynamic';
@@ -25,11 +26,12 @@ const SUBSCRIPTION_BADGE: Record<
   SubscriptionStatus,
   { label: string; variant: 'success' | 'warning' | 'destructive' | 'secondary' }
 > = {
+  trialing: { label: 'En prueba', variant: 'secondary' },
   active: { label: 'Activa', variant: 'success' },
   past_due: { label: 'Vencida', variant: 'warning' },
-  canceled: { label: 'Cancelada', variant: 'destructive' },
-  paused: { label: 'Pausada', variant: 'secondary' },
-  pending: { label: 'Pendiente', variant: 'secondary' },
+  cancelled: { label: 'Cancelada', variant: 'destructive' },
+  frozen: { label: 'Congelada', variant: 'secondary' },
+  expired: { label: 'Expirada', variant: 'secondary' },
 };
 
 function asBenefits(features: unknown): string[] {
@@ -45,7 +47,7 @@ export default async function MembershipsPage() {
     supabase.from('subscriptions').select('plan_id').eq('status', 'active'),
     supabase
       .from('subscriptions')
-      .select('id, profile_id, plan_id, status, current_period_start')
+      .select('id, profile_id, plan_id, status, starts_at')
       .order('created_at', { ascending: false })
       .limit(10),
   ]);
@@ -68,10 +70,10 @@ export default async function MembershipsPage() {
   if (profileIds.length > 0) {
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('id, full_name, email')
+      .select('id, full_name')
       .in('id', profileIds);
     for (const profile of profiles ?? []) {
-      profileNames.set(profile.id, profile.full_name ?? profile.email);
+      profileNames.set(profile.id, profile.full_name);
     }
   }
 
@@ -86,13 +88,14 @@ export default async function MembershipsPage() {
           <p className="text-sm text-muted-foreground">Aún no hay planes creados.</p>
         ) : (
           plans.map((plan) => {
-            const benefits = asBenefits(plan.features);
+            const benefits = asBenefits(plan.benefits);
+            const interval = durationDaysToInterval(plan.duration_days);
             const editable: PlanFormData = {
               id: plan.id,
               name: plan.name,
               description: plan.description ?? '',
               priceCop: Math.round(plan.price_cop),
-              interval: plan.interval === 'year' ? 'year' : 'month',
+              interval,
               benefits: benefits.join('\n'),
             };
             return (
@@ -130,7 +133,7 @@ export default async function MembershipsPage() {
                   <p className="font-display text-2xl font-semibold text-foreground">
                     {formatCOP(plan.price_cop)}
                     <span className="ml-1 text-sm font-normal text-muted-foreground">
-                      /{plan.interval === 'year' ? 'año' : 'mes'}
+                      /{interval === 'year' ? 'año' : 'mes'}
                     </span>
                   </p>
 
@@ -202,7 +205,7 @@ export default async function MembershipsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {formatDate(sub.current_period_start)}
+                        {formatDate(sub.starts_at)}
                       </TableCell>
                     </TableRow>
                   ))

@@ -36,7 +36,12 @@ export function Tabs({ defaultValue, className, children }: TabsProps) {
 
 export function TabsList({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
-    <div role="tablist" className={cn('flex items-center gap-1 border-b border-border', className)}>
+    // overflow-x-auto: con muchas pestañas (p. ej. detalle de miembro) la lista
+    // scrollea en mobile en lugar de desbordar el contenedor.
+    <div
+      role="tablist"
+      className={cn('flex items-center gap-1 overflow-x-auto border-b border-border', className)}
+    >
       {children}
     </div>
   );
@@ -52,7 +57,7 @@ export function TabsTrigger({ value, children }: { value: string; children: Reac
       aria-selected={active}
       onClick={() => ctx.setValue(value)}
       className={cn(
-        '-mb-px border-b-2 px-4 py-2.5 text-sm font-medium transition-colors',
+        '-mb-px shrink-0 whitespace-nowrap border-b-2 px-4 py-2.5 text-sm font-medium transition-colors',
         active
           ? 'border-primary text-foreground'
           : 'border-transparent text-muted-foreground hover:text-foreground',

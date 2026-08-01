@@ -69,7 +69,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     const { data: tenant } = await supabase
       .from('tenants')
       .select('id')
-      .eq('slug', subdomain)
+      .eq('subdomain', subdomain)
       .eq('is_active', true)
       .maybeSingle<{ id: string }>();
     if (tenant) {

@@ -4,7 +4,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { STAFF_ROLES } from '@/lib/roles';
 import type { UserRole } from '@/types/database';
-import type { Profile } from '@/types';
+import type { Profile, SessionProfile } from '@/types';
 
 /**
  * Helpers de autenticación para Server Components, Server Actions y Route
@@ -25,21 +25,25 @@ export async function getSession(): Promise<Session | null> {
  * Perfil completo del usuario autenticado. Resuelve por
  * `auth_user_id = auth.uid()` (recordar: `profiles.id` es un uuid propio).
  * Usa `getUser()` (revalida el token) en lugar de la sesión de cookie.
+ *
+ * El correo se adjunta desde `auth.users`: la tabla `profiles` no lo almacena.
  */
-export async function getProfile(): Promise<Profile | null> {
+export async function getProfile(): Promise<SessionProfile | null> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase
+  const withEmail = (row: Profile): SessionProfile => ({ ...row, email: user.email ?? null });
+
+  const { data } = await supabase
     .from('profiles')
     .select('*')
     .eq('auth_user_id', user.id)
     .maybeSingle();
 
-  if (data) return data;
+  if (data) return withEmail(data);
 
   // Fallback a cliente admin en el servidor si RLS o cookies filtraron la lectura
   const { createAdminClient } = await import('@/lib/supabase/admin');
@@ -50,7 +54,7 @@ export async function getProfile(): Promise<Profile | null> {
     .eq('auth_user_id', user.id)
     .maybeSingle();
 
-  return adminData;
+  return adminData ? withEmail(adminData) : null;
 }
 
 /** Exige sesión; redirige a /login si no la hay. Devuelve el usuario validado. */
@@ -70,7 +74,7 @@ export async function requireAuth(): Promise<User> {
  * Redirige a /login si no hay perfil y a / si el rol no está permitido.
  * Devuelve el perfil cuando el acceso es válido.
  */
-export async function requireRole(roles: readonly UserRole[]): Promise<Profile> {
+export async function requireRole(roles: readonly UserRole[]): Promise<SessionProfile> {
   const profile = await getProfile();
   if (!profile) {
     redirect('/login');
@@ -82,7 +86,7 @@ export async function requireRole(roles: readonly UserRole[]): Promise<Profile> 
 }
 
 /** Atajo: exige rol de staff (acceso a /dashboard). */
-export async function requireStaff(): Promise<Profile> {
+export async function requireStaff(): Promise<SessionProfile> {
   return requireRole(STAFF_ROLES);
 }
 

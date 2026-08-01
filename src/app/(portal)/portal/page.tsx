@@ -24,9 +24,9 @@ export default async function PortalHomePage() {
   const [subResult, bookingsResult, loyaltyResult, announcementsResult] = await Promise.all([
     supabase
       .from('subscriptions')
-      .select('id, plan_id, status, current_period_start, current_period_end')
+      .select('id, plan_id, status, starts_at, ends_at')
       .eq('profile_id', profile.id)
-      .in('status', ['active', 'paused', 'past_due'])
+      .in('status', ['active', 'frozen', 'past_due'])
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle(),
@@ -65,9 +65,9 @@ export default async function PortalHomePage() {
   if (bookingClassIds.length > 0) {
     const { data: classes } = await supabase
       .from('classes')
-      .select('id, starts_at, class_type_id')
+      .select('id, scheduled_at, class_type_id')
       .in('id', bookingClassIds)
-      .gte('starts_at', nowIso);
+      .gte('scheduled_at', nowIso);
     const typeIds = Array.from(new Set((classes ?? []).map((cls) => cls.class_type_id)));
     const typeNames = new Map<string, string>();
     if (typeIds.length > 0) {
@@ -81,7 +81,7 @@ export default async function PortalHomePage() {
       upcoming.push({
         id: booking.id,
         status: booking.status,
-        startsAt: cls.starts_at,
+        startsAt: cls.scheduled_at,
         typeName: typeNames.get(cls.class_type_id) ?? 'Clase',
       });
     }
@@ -94,9 +94,9 @@ export default async function PortalHomePage() {
   // Progreso de membresía.
   let remainingDays: number | null = null;
   let progress = 0;
-  if (subscription?.current_period_start && subscription.current_period_end) {
-    const start = new Date(subscription.current_period_start);
-    const end = new Date(subscription.current_period_end);
+  if (subscription?.starts_at && subscription.ends_at) {
+    const start = new Date(subscription.starts_at);
+    const end = new Date(subscription.ends_at);
     const now = new Date();
     const total = Math.max(daysBetween(start, end), 1);
     const elapsed = Math.min(Math.max(daysBetween(start, now), 0), total);
@@ -122,7 +122,7 @@ export default async function PortalHomePage() {
                 <Badge variant={subscription.status === 'active' ? 'success' : 'warning'}>
                   {subscription.status === 'active'
                     ? 'Activa'
-                    : subscription.status === 'paused'
+                    : subscription.status === 'frozen'
                       ? 'Congelada'
                       : 'Vencida'}
                 </Badge>

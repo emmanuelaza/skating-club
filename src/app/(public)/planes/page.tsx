@@ -6,8 +6,8 @@ import { getMembershipPlans, getAllFAQs, getSiteConfig } from '@/sanity/lib/quer
 
 export const revalidate = 60;
 
-function benefits(features: unknown): string[] {
-  return Array.isArray(features) ? features.filter((item): item is string => typeof item === 'string') : [];
+function benefits(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,8 +27,8 @@ export default async function PlanesPage() {
     name: plan.name,
     description: (plan as { description?: string }).description ?? '',
     priceCop: plan.price_cop,
-    interval: plan.interval === 'year' ? 'year' : 'month',
-    features: benefits(plan.features),
+    interval: plan.duration_days >= 180 ? 'year' : 'month',
+    features: benefits(plan.benefits),
     recommended: plansData.length >= 3 && index === 1,
   }));
 

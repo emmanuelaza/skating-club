@@ -26,11 +26,11 @@ export default async function PortalClassesPage({
 
   let classesQuery = supabase
     .from('classes')
-    .select('id, class_type_id, instructor_id, capacity, starts_at, ends_at, location')
-    .neq('status', 'canceled')
-    .gte('starts_at', now.toISOString())
-    .lt('starts_at', weekAhead.toISOString())
-    .order('starts_at', { ascending: true });
+    .select('id, class_type_id, instructor_id, capacity, scheduled_at, duration_minutes, room')
+    .neq('status', 'cancelled')
+    .gte('scheduled_at', now.toISOString())
+    .lt('scheduled_at', weekAhead.toISOString())
+    .order('scheduled_at', { ascending: true });
   if (type) classesQuery = classesQuery.eq('class_type_id', type);
 
   const [classesResult, typesResult] = await Promise.all([
@@ -62,7 +62,7 @@ export default async function PortalClassesPage({
         .eq('profile_id', profile.id)
         .in('status', ['confirmed', 'waitlisted']),
       instructorIds.length > 0
-        ? supabase.from('profiles').select('id, full_name, email').in('id', instructorIds)
+        ? supabase.from('profiles').select('id, full_name').in('id', instructorIds)
         : Promise.resolve({ data: [], error: null }),
     ]);
     for (const booking of bookingsAll.data ?? []) {
@@ -72,7 +72,7 @@ export default async function PortalClassesPage({
       myBooking.set(booking.class_id, { id: booking.id, status: booking.status });
     }
     for (const person of instructors.data ?? []) {
-      instructorNames.set(person.id, person.full_name ?? person.email);
+      instructorNames.set(person.id, person.full_name);
     }
   }
 
@@ -124,9 +124,7 @@ export default async function PortalClassesPage({
             const booked = bookedConfirmed.get(cls.id) ?? 0;
             const available = Math.max(cls.capacity - booked, 0);
             const mine = myBooking.get(cls.id) ?? null;
-            const durationMin = Math.round(
-              (new Date(cls.ends_at).getTime() - new Date(cls.starts_at).getTime()) / 60_000,
-            );
+            const durationMin = cls.duration_minutes;
             return (
               <Card key={cls.id}>
                 <CardContent className="space-y-3 p-4">
@@ -137,7 +135,7 @@ export default async function PortalClassesPage({
                       </p>
                       <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="size-3.5" aria-hidden />
-                        {formatDate(cls.starts_at)} · {formatTime(cls.starts_at)} · {durationMin} min
+                        {formatDate(cls.scheduled_at)} · {formatTime(cls.scheduled_at)} · {durationMin} min
                       </p>
                       {cls.instructor_id ? (
                         <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
